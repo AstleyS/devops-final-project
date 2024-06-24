@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="lu.uni.e4l.platform.service.CalculatorServiceTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-09-26T14:05:39" hostname="dev-env-e4l" time="1.07">
+  <properties/>
+  <testcase name="calculate" classname="lu.uni.e4l.platform.service.CalculatorServiceTest" time="1.07"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

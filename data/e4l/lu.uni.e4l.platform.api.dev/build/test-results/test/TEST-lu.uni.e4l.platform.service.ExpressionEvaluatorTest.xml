@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="lu.uni.e4l.platform.service.ExpressionEvaluatorTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2023-09-26T14:05:40" hostname="dev-env-e4l" time="0.013">
+  <properties/>
+  <testcase name="tokenize" classname="lu.uni.e4l.platform.service.ExpressionEvaluatorTest" time="0.004"/>
+  <testcase name="toReverePolishNotation" classname="lu.uni.e4l.platform.service.ExpressionEvaluatorTest" time="0.001"/>
+  <testcase name="replaceVariablesWithValues" classname="lu.uni.e4l.platform.service.ExpressionEvaluatorTest" time="0.001"/>
+  <testcase name="invalidNumberOfFunctionArguments" classname="lu.uni.e4l.platform.service.ExpressionEvaluatorTest" time="0.002"/>
+  <testcase name="evaluate" classname="lu.uni.e4l.platform.service.ExpressionEvaluatorTest" time="0.002"/>
+  <testcase name="invalidParenthesis" classname="lu.uni.e4l.platform.service.ExpressionEvaluatorTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
