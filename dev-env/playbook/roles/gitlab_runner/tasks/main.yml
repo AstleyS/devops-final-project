@@ -1,0 +1,37 @@
+---
+
+- name: Add GitLab Runner repository
+  shell: curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh | sudo bash
+  become: yes
+
+- name: Install GitLab Runner
+  apt:
+    name: gitlab-runner
+    state: present
+  become: yes
+
+- name: Register GitLab Runner
+  command:
+    cmd: sudo gitlab-runner register
+  register: runner_registration
+
+- name: Set GitLab Runner configuration during registration
+  set_fact:
+    gitlab_runner_token: "{{ lookup('file', '/vagrant/data/token.txt') }}"
+
+- name: Register GitLab Runner
+  command:
+    cmd: sudo gitlab-runner register \
+      --gitlab-url http://192.168.58.111/gitlab \
+      --registration-token={{ gitlab_runner_token }} \
+      --description 'docker'\
+      --tag-list 'integration' \
+      --executor 'docker' \
+      --docker-image ' alpine:latest' \
+      --run-untagged="true"
+  register: runner_registration
+
+- name: Restart GitLab Runner
+  command:
+    cmd: sudo gitlab-runner restart
+  when: changed

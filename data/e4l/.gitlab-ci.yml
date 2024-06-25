@@ -1,0 +1,80 @@
+image: alpine:latest
+
+stages:
+  - build
+  - test
+  - run
+
+# Cache dependencies to speed up builds
+cache:
+  paths:
+    - lu.uni.e4l.platform.api.dev/.gradle/
+    - lu.uni.e4l.platform.frontend.dev/node_modules/
+
+# Define variables
+variables:
+  GRADLE_USER_HOME: "./data/lu.uni.e4l.platform.api.dev/.gradle"
+  NODE_ENV: production
+
+# Build the lu.uni.e4l.platform.api.dev application
+build_backend:
+  stage: build
+  script:
+    - cd lu.uni.e4l.platform.api.dev
+    - ./gradlew clean build
+  artifacts:
+    paths:
+      - lu.uni.e4l.platform.api.dev/build/libs/
+
+# Build the lu.uni.e4l.platform.frontend.dev application
+build_frontend:
+  stage: build
+  script:
+    - cd lu.uni.e4l.platform.frontend.dev
+    - npm install
+    - npm run build
+  artifacts:
+    paths:
+      - lu.uni.e4l.platform.frontend.dev/build/
+
+# Test the lu.uni.e4l.platform.api.dev application
+test_lu.uni.e4l.platform.api.dev:
+  stage: test
+  script:
+    - cd lu.uni.e4l.platform.api.dev
+    - ./gradlew test
+  artifacts:
+    when: always
+    reports:
+      junit:
+        - lu.uni.e4l.platform.api.dev/build/test-results/test/TEST-*.xml
+    paths:
+      - lu.uni.e4l.platform.api.dev/build/reports/tests/test/
+
+# Test the lu.uni.e4l.platform.frontend.dev application
+test_lu.uni.e4l.platform.frontend.dev:
+  stage: test
+  script:
+    - cd lu.uni.e4l.platform.frontend.dev
+    - npm test
+  artifacts:
+    when: always
+    reports:
+      junit:
+        - lu.uni.e4l.platform.frontend.dev/test-results/test/TEST-*.xml
+    paths:
+      - lu.uni.e4l.platform.frontend.dev/test-results/
+
+# Run the lu.uni.e4l.platform.api.dev application
+run_lu.uni.e4l.platform.api.dev:
+  stage: run
+  script:
+    - cd lu.uni.e4l.platform.api.dev
+    - ./gradlew bootRun
+
+# Run the lu.uni.e4l.platform.frontend.dev application
+run_lu.uni.e4l.platform.frontend.dev:
+  stage: run
+  script:
+    - cd lu.uni.e4l.platform.frontend.dev
+    - npm start

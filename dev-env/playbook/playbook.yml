@@ -1,0 +1,31 @@
+---
+
+- hosts: all
+  remote_user: vagrant
+  become: yes
+  become_method: sudo
+    
+  vars:
+    vHome: /home/vagrant
+
+  tasks:
+    - include_role:
+        name: gitlab
+
+    - include_role:
+        name: docker
+    
+    - include_role:
+        name: gitlab_runner
+
+       
+    - name: Clone Git repository
+      git:
+        repo: http://root:passvagrant@http://192.168.58.111/gitlab/root/e4l.git
+        dest: /home/vagrant/e4l
+
+    - name: Set Git user email
+      command: git config --global user.email "root@root.com"
+
+    - name: Set Git user name
+      command: git config --global user.name "root"
