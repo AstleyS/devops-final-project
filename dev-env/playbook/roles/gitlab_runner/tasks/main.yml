@@ -10,28 +10,17 @@
     state: present
   become: yes
 
-- name: Register GitLab Runner
-  command:
-    cmd: sudo gitlab-runner register
-  register: runner_registration
-
-- name: Set GitLab Runner configuration during registration
-  set_fact:
-    gitlab_runner_token: "{{ lookup('file', '/vagrant/data/token.txt') }}"
-
-- name: Register GitLab Runner
-  command:
-    cmd: sudo gitlab-runner register \
-      --gitlab-url http://192.168.58.111/gitlab \
-      --registration-token={{ gitlab_runner_token }} \
-      --description 'docker'\
-      --tag-list 'integration' \
-      --executor 'docker' \
-      --docker-image ' alpine:latest' \
+- name: Register the GitLab Runner
+  become: yes
+  shell: |
+    sudo gitlab-runner register --non-interactive \
+      --url http://192.168.56.5/gitlab/ \
+      --registration-token AvuTEsPPoPo7_cd5a9EQ \
+      --description "[integration-server] docker" \
+      --tag-list "integration" \
+      --executor "docker" \
+      --docker-image "alpine:latest" \
       --run-untagged="true"
-  register: runner_registration
 
 - name: Restart GitLab Runner
-  command:
-    cmd: sudo gitlab-runner restart
-  when: changed
+  command: sudo gitlab-runner restart

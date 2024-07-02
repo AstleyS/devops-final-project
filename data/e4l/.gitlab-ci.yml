@@ -1,9 +1,19 @@
-image: alpine:latest
+image: gradle:6.7.1 
 
 stages:
   - build
   - test
   - run
+  #- deploy
+
+variables:
+  MYSQL_DATABASE: e4l
+  MYSQL_USER: root
+  MYSQL_PASSWORD: 12345678
+  MYSQL_ROOT_PASSWORD: 12345678
+  GRADLE_USER_HOME: "./lu.uni.e4l.platform.api.dev/.gradle"
+  BACKEND_DIR: "lu.uni.e4l.platform.api.dev"
+  FRONTEND_DIR: "lu.uni.e4l.platform.frontend.dev"
 
 # Cache dependencies to speed up builds
 cache:
@@ -11,70 +21,71 @@ cache:
     - lu.uni.e4l.platform.api.dev/.gradle/
     - lu.uni.e4l.platform.frontend.dev/node_modules/
 
-# Define variables
-variables:
-  GRADLE_USER_HOME: "./data/lu.uni.e4l.platform.api.dev/.gradle"
-  NODE_ENV: production
+services:
+  - mysql:8.0.21
 
-# Build the lu.uni.e4l.platform.api.dev application
+# Build the backend application
 build_backend:
   stage: build
   script:
-    - cd lu.uni.e4l.platform.api.dev
+    - cd $BACKEND_DIR
     - ./gradlew clean build
   artifacts:
     paths:
-      - lu.uni.e4l.platform.api.dev/build/libs/
+      - $BACKEND_DIR/build/libs/
 
-# Build the lu.uni.e4l.platform.frontend.dev application
+# Build the frontend application
 build_frontend:
   stage: build
+  image: node:15.14
   script:
-    - cd lu.uni.e4l.platform.frontend.dev
+    - cd $FRONTEND_DIR
     - npm install
-    - npm run build
   artifacts:
     paths:
-      - lu.uni.e4l.platform.frontend.dev/build/
+      - $FRONTEND_DIR/build/
 
-# Test the lu.uni.e4l.platform.api.dev application
-test_lu.uni.e4l.platform.api.dev:
+# Test the backend application
+test_backend:
   stage: test
   script:
-    - cd lu.uni.e4l.platform.api.dev
+    - cd $BACKEND_DIR
     - ./gradlew test
-  artifacts:
-    when: always
-    reports:
-      junit:
-        - lu.uni.e4l.platform.api.dev/build/test-results/test/TEST-*.xml
-    paths:
-      - lu.uni.e4l.platform.api.dev/build/reports/tests/test/
+  #artifacts:
+  #  when: always
+  #  reports:
+  #    junit:
+  #      - $BACKEND_DIR/build/test-results/test/TEST-*.xml
+  #  paths:
+  #    - $BACKEND_DIR/build/reports/tests/test/
 
-# Test the lu.uni.e4l.platform.frontend.dev application
-test_lu.uni.e4l.platform.frontend.dev:
+# Test the frontend application
+test_frontend:
   stage: test
+  image: node:15.14
   script:
-    - cd lu.uni.e4l.platform.frontend.dev
+    - cd $FRONTEND_DIR
     - npm test
-  artifacts:
-    when: always
-    reports:
-      junit:
-        - lu.uni.e4l.platform.frontend.dev/test-results/test/TEST-*.xml
-    paths:
-      - lu.uni.e4l.platform.frontend.dev/test-results/
+  #artifacts:
+  #  when: always
+  #  reports:
+  #    junit:
+  #      - $FRONTEND_DIR/test-results/test/TEST-*.xml
+  #  paths:
+  #    - $FRONTEND_DIR/test-results/
 
-# Run the lu.uni.e4l.platform.api.dev application
-run_lu.uni.e4l.platform.api.dev:
+# Run the backend application
+run_backend:
   stage: run
   script:
-    - cd lu.uni.e4l.platform.api.dev
+    - cd $BACKEND_DIR
     - ./gradlew bootRun
+    - sleep 60
 
-# Run the lu.uni.e4l.platform.frontend.dev application
-run_lu.uni.e4l.platform.frontend.dev:
+# Run the frontend application
+run_frontend:
   stage: run
+  image: node:15.14
   script:
-    - cd lu.uni.e4l.platform.frontend.dev
+    - cd $FRONTEND_DIR
     - npm start

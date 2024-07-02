@@ -16,9 +16,9 @@ echo "Restarting ports:"
 
 for port in $(seq $start_port $end_port); do
     # Check if the port is in use and kill the process
-    if sudo lsof -i :$port > /dev/null; then
+    if lsof -i :$port > /dev/null; then
         echo "Port $port is in use. Restarting..."
-        sudo fuser -k $port/tcp
+        fuser -k $port/tcp
         sleep 3
     else
         echo "Port $port is not in use."
@@ -40,7 +40,7 @@ fi
 
 
 #Initialising CI server			--------------------------------------------
-echo "Initialising CI server"
+echo "============Initialising CI server============"
 cd integration-env
 
 # Check if the VM is already created
@@ -52,10 +52,20 @@ else
     vagrant halt -f && vagrant up && vagrant provision
 fi
 
-#Product_url="http://192.168.58.111/gitlab/users/sign_in"
-#http_status=""
+# Wait for the VM to be up
+sleep 10
 
-#echo "Waiting for the CI server to start..."
+
+# Check if URL is up
+url="http://192.168.56.5/gitlab"
+status_code=$(curl --write-out %{http_code} --silent --output /dev/null "$url")
+echo "Checking URL $url..."
+while [[ "$status_code" -ne 200 ]]; do
+echo "Waiting for $url to be up..."
+sleep 10
+status_code=$(curl --write-out %{http_code} --silent --output /dev/null "$url")
+done
+echo "$url is up and returned status code $status_code"
 
 
 # Initializing Developer Environment
@@ -68,10 +78,14 @@ fi
 
 # End timer
 end_time=$(date +%s)
+duration_seconds=$((end_time - start_time))
 duration=$(echo "scale=2; $duration_seconds / 60" | bc)
 
 # Display time taken
-echo "Development environment setup took $duration minutes."
+echo "Environment setup took $duration minutes."
+
+
+
 
 vagrant ssh
 

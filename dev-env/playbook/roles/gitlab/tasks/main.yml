@@ -60,6 +60,13 @@
     state: present
   when: not gitlab_file.stat.exists
 
+- name: Replace external_url in GitLab configuration
+  ansible.builtin.lineinfile:
+    path: /etc/gitlab/gitlab.rb
+    regexp: "^external_url 'http://gitlab.example.com'"
+    line: "external_url 'http://192.168.56.5/gitlab'"
+    state: present
+
 - name: Add GitLab port configuration
   blockinfile:
     path: /etc/gitlab/gitlab.rb
@@ -68,4 +75,3 @@
 
 - name: Reconfigure and restart GitLab
   command: gitlab-ctl reconfigure && gitlab-ctl restart unicorn && gitlab-ctl restart 
-

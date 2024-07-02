@@ -42,13 +42,13 @@ lu/uni/e4l/platform/controller/SeminarController.java
  lu.uni.e4l.platform.controller.SeminarController
 lu/uni/e4l/platform/exception/ForbiddenException.java
  lu.uni.e4l.platform.exception.ForbiddenException
+lu/uni/e4l/platform/service/SessionService.java
+ lu.uni.e4l.platform.service.SessionService
+ lu.uni.e4l.platform.service.SessionService$InvalidQuestionnaireException
 lu/uni/e4l/platform/model/PossibleAnswer.java
  lu.uni.e4l.platform.model.PossibleAnswer
 lu/uni/e4l/platform/service/CalculatorService.java
  lu.uni.e4l.platform.service.CalculatorService
-lu/uni/e4l/platform/service/SessionService.java
- lu.uni.e4l.platform.service.SessionService
- lu.uni.e4l.platform.service.SessionService$InvalidQuestionnaireException
 lu/uni/e4l/platform/model/scale/AllowedOption.java
  lu.uni.e4l.platform.model.scale.AllowedOption
 lu/uni/e4l/platform/exception/BadRequestException.java
@@ -83,10 +83,10 @@ lu/uni/e4l/platform/model/User.java
  lu.uni.e4l.platform.model.User
 lu/uni/e4l/platform/repository/QuestionRepository.java
  lu.uni.e4l.platform.repository.QuestionRepository
-lu/uni/e4l/platform/model/Questionnaire.java
- lu.uni.e4l.platform.model.Questionnaire
 lu/uni/e4l/platform/security/WebSecurity.java
  lu.uni.e4l.platform.security.WebSecurity
+lu/uni/e4l/platform/model/Questionnaire.java
+ lu.uni.e4l.platform.model.Questionnaire
 lu/uni/e4l/platform/Main.java
  lu.uni.e4l.platform.Main
 lu/uni/e4l/platform/model/ContactFormData.java

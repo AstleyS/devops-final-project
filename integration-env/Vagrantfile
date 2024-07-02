@@ -14,7 +14,7 @@ Vagrant.configure("2") do |config|
     # Every Vagrant development environment requires a box. You can search for
     # boxes at https://vagrantcloud.com/search.
     config.vm.box = "ubuntu/xenial64"
-    config.vm.hostname = "dev-env-e4l"
+    config.vm.hostname = "integraton-server-e4l"
     
     ENV['LC_ALL']="en_US.UTF-8"
   
@@ -29,7 +29,7 @@ Vagrant.configure("2") do |config|
     # within the machine from a port on the host machine. In the example below,
     # accessing "localhost:8080" will access port 80 on the guest machine.
     # NOTE: This will enable public access to the opened port
-    config.vm.network "forwarded_port", guest: 8088, host: 8080
+    config.vm.network "forwarded_port", guest: 8088, host: 80
     #config.vm.network "forwarded_port", guest: 8088, host: 8080
   
     # Create a forwarded port mapping which allows access to a specific port
@@ -51,7 +51,10 @@ Vagrant.configure("2") do |config|
     # the path on the guest to mount the folder. And the optional third
     # argument is a set of non-required options.
     config.vm.synced_folder "../data", "/vagrant_data"
+    config.vm.synced_folder "../data/e4l", "/home/vagrant/e4l"
+    config.vm.synced_folder "../data/scripts", "/home/vagrant/scripts"
     config.vm.synced_folder "../data/shared", "/home/vagrant/shared"
+    
   
     # Provider-specific configuration so you can fine-tune various
     # backing providers for Vagrant. These expose provider-specific options.
@@ -59,12 +62,12 @@ Vagrant.configure("2") do |config|
     
     
     config.vm.provider "virtualbox" do |vb|
-        # Display the VirtualBox GUI when booting the machine
-           # vb.gui = true
+      # Display the VirtualBox GUI when booting the machine
+        # vb.gui = true
     
-        # Customize the amount of memory on the VM:
-        vb.memory = "3072"
-        vb.cpus = 1
+      # Customize the amount of memory on the VM:
+      vb.memory = "4096"
+      vb.cpus = 2
     end
     
     # View the documentation for the provider you are using for more
@@ -74,20 +77,10 @@ Vagrant.configure("2") do |config|
     # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
     # documentation for more information about their specific syntax and use.	
     
-    config.vm.provision "shell", inline: <<-SHELL
-        
-        # Update package lists
-        sudo apt-get update
-        sudo apt-get install curl
-    
-        # Install python
-        sudo apt-get install --yes python
-
-      SHELL
-     
+    config.vm.provision "shell", path: "../data/scripts/env_setup.sh"
+           
     config.vm.provision "ansible" do |ansible|
-          ansible.playbook = "./playbook/playbook.yml"
+      ansible.playbook = "./playbook/playbook.yml"
       ansible.compatibility_mode = "auto"
     end
-      
   end

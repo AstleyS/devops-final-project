@@ -15,17 +15,27 @@
     - include_role:
         name: docker
     
-    - include_role:
-        name: gitlab_runner
+    #- include_role:
+    #    name: gitlab_runner
 
-       
-    - name: Clone Git repository
+    ---
+    
+    - name: Create GitLab user
+      command: >
+        gitlab-rails runner "user = User.new(username: 'user', email: 'user@example.com', name: 'user user', password: 'password', password_confirmation: 'password'); user.admin = false; user.save!"
+
+    - name: Generate GitLab Personal Access Token
+      command: >
+        gitlab-rails runner "user = User.find_by(username: 'user'); token = user.personal_access_tokens.create(scopes: [:api], name: 'API Token'); token.set_token('AvuTEsPPoPo7_cd5a9EQ'); token.save!"
+
+    - name: Clone the project
       git:
-        repo: http://root:passvagrant@http://192.168.58.111/gitlab/root/e4l.git
+        repo: http://user:password@http://192.168.56.5/gitlab/user/e4l.git
         dest: /home/vagrant/e4l
+
 
     - name: Set Git user email
       command: git config --global user.email "root@root.com"
 
-    - name: Set Git user name
-      command: git config --global user.name "root"
+    #- name: Set Git user name
+    #  command: git config --global user.name "root"

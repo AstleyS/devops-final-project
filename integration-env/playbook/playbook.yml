@@ -8,24 +8,30 @@
   vars:
     vHome: /home/vagrant
 
+    # Vars that I added
+    integration_ip: 192.168.56.5
+    port_guest: 8088
+    project_dir: "{{ vHome }}/e4l"
+    #gitlab_project_url: "{{ gitlab_url }}/gitlab/{{ gitlab_username }}/e4l"
+    
+    #gitlab_username: user
+    #gitlab_user_email: user@example.com
+    #gitlab_user_full_name: "user user"
+    #gitlab_user_password: password
+    #gitlab_token_name: "CI/CD Token"
+    #gitlab_token: "AvuTEsPPoPo7_cd5a9EQ" # Replace with the actual token generation mechanism
+    #gitlab_repo_remote: "{{ gitlab_project_url }}"
+
   tasks:
+
+    # Gitlab configuration
     - include_role:
         name: gitlab
 
+    # Docker configuration
     - include_role:
         name: docker
     
+    # Gitlab Runner setup
     - include_role:
         name: gitlab_runner
-
-       
-    #- name: Clone Git repository
-    #  git:
-    #    repo: http://root:passvagrant@http://192.168.58.111/gitlab/root/e4l.git
-    #    dest: /home/vagrant/e4l
-
-    #- name: Set Git user email
-    #  command: git config --global user.email "root@root.com"
-
-    #- name: Set Git user name
-    #  command: git config --global user.name "root"

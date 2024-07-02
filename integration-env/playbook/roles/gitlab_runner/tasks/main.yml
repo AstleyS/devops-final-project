@@ -10,17 +10,44 @@
     state: present
   become: yes
 
-- name: Register the GitLab Runner
-  become: yes
-  shell: |
-    sudo gitlab-runner register --non-interactive \
-      --url http://192.168.56.5/gitlab/ \
-      --registration-token AvuTEsPPoPo7_cd5a9EQ \
-      --description "[integration-server] docker" \
-      --tag-list "integration" \
-      --executor "docker" \
-      --docker-image "alpine:latest" \
-      --run-untagged="true"
+#- name: Create GitLab user
+#      shell: |
+#        gitlab-rails runner "
+#        user = User.new(
+#          username: 'user',
+#          email: 'user@example.com',
+#          name: 'user user',
+#          password: 'password',
+#          password_confirmation: 'password'
+#        );
+#        user.admin = false;
+#        user.save!"
+#      become_user: git
 
-- name: Restart GitLab Runner
-  command: sudo gitlab-runner restart
+#    - name: Generate GitLab Personal Access Token
+#      shell: |
+#        gitlab-rails runner "
+#        user = User.find_by(username: 'user');
+#        token = user.personal_access_tokens.create(scopes: [:api], name: 'API Token');
+#        token.set_token('AvuTEsPPoPo7_cd5a9EQ');
+#        token.save!"
+#      become_user: git
+
+
+#- name: Repository setup.
+#    command: sh /home/vagrant/scripts/setup_repo.sh
+
+#- name: Register the GitLab Runner
+#  become: yes
+#  shell: |
+#    sudo gitlab-runner register --non-interactive \
+#      --url http://192.168.56.5/gitlab/ \
+#      --registration-token AvuTEsPPoPo7_cd5a9EQ \
+#      --description "[integration-server] docker" \
+#      --tag-list "integration" \
+#      --executor "docker" \
+#      --docker-image "alpine:latest" \
+#      --run-untagged="true"
+
+#- name: Restart GitLab Runner
+#  command: sudo gitlab-runner restart
