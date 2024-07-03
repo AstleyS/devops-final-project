@@ -12,12 +12,13 @@
     integration_ip: 192.168.56.5
     port_guest: 8088
     project_dir: "{{ vHome }}/e4l"
-    #gitlab_project_url: "{{ gitlab_url }}/gitlab/{{ gitlab_username }}/e4l"
     
-    #gitlab_username: user
-    #gitlab_user_email: user@example.com
-    #gitlab_user_full_name: "user user"
-    #gitlab_user_password: password
+    gitlab_user_username: user
+    gitlab_user_email: user@example.com
+    gitlab_user_name: "user user"
+    gitlab_user_password: password
+    gitlab_url: "http://{{ integration_ip }}/gitlab/"
+    
     #gitlab_token_name: "CI/CD Token"
     #gitlab_token: "AvuTEsPPoPo7_cd5a9EQ" # Replace with the actual token generation mechanism
     #gitlab_repo_remote: "{{ gitlab_project_url }}"

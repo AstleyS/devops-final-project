@@ -1,22 +1,37 @@
-CI
-The objective of this stage is to configure the GitLab project such that every time a developer publishes a change on the remote repository, the build process is automatically started. More precisely, upon detection of a change on the remote repository, GitLab has to:
+Software Engineering Environments (or DevOps) Final Project
 
-image: Specifies the base Docker image for the CI jobs. Adjust the image based on the requirements of your project. You might want to use a custom image or a multi-stage build if your project has specific dependencies.
+## Prerequisites
 
-stages: Defines the stages of the pipeline.
+### Hardware Requirements
 
-cache: Caches dependencies to speed up subsequent builds.
+1. Laptop with at least 8 Gb memory (recommended 16 Gb, ideally 32 Gb)
 
-variables: Defines variables to be used in the CI pipeline. GRADLE_USER_HOME is set for Gradle to cache dependencies, and NODE_ENV is set to production for the frontend build.
+### Software Dependencies
 
-build_backend: Builds the backend application using Gradle. The artifacts section ensures that the build output is available for subsequent stages.
+- VirtualBox(v 6.0, or higher)
+Instructions to install here: https://www.virtualbox.org/wiki/Downloads
 
-build_frontend: Builds the frontend application using npm.
+- Vagrant (v 2.2.5, or higher)
+Instructions to install here: https://www.vagrantup.com/downloads.html
+(only if using Windows 10 or Windows 8 Pro) Disable Hyper-V, see instructions to disable here: https://www.poweronplatforms.com/enable-disable-hyper-v-windows-10-8/
+Check installation with the command vagrant -v'
 
-test_backend: Runs tests for the backend application. Test reports are stored as artifacts and can be viewed in GitLab.
+- Ansible (v 2.7.5, or higher)
+Instructions to install here: https://docs.ansible.com/
+Check installation with the command ansible --version
 
-test_frontend: Runs tests for the frontend application.
 
-run_backend: Starts the backend application.
+### Student
+- Astley GOMES DOS SANTOS, 0211250012
 
-run_frontend: Starts the frontend application.
+### Running the Project
+To execute the project, use the following Bash command:
+
+```bash
+./launch.sh
+```
+
+The `launch.sh` script automates the setup by performing the following steps:
+
+1. **Turning Off Virtual Machines**: Ensures that any running Vagrant virtual machines are turned off.
+2. **Restarting Ports**: Restarts ports 8080 to 8088, resolving potential conflicts with other programs.

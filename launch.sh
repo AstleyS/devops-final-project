@@ -4,7 +4,7 @@
 start_time=$(date +%s)
 
 # Closing all running Vagrant virtual machines
-echo "Closing all running Vagrant virtual machines"
+echo -e "\nClosing all running Vagrant virtual machines\n"
 sleep 5
 vagrant global-status --prune | awk '/virtualbox.*running/ {print $1}' | xargs -L1 vagrant halt
 
@@ -12,23 +12,22 @@ vagrant global-status --prune | awk '/virtualbox.*running/ {print $1}' | xargs -
 start_port=8080
 end_port=8088
 
-echo "Restarting ports:"
+echo -e "\nRestarting ports:\n"
 
 for port in $(seq $start_port $end_port); do
-    # Check if the port is in use and kill the process
-    if lsof -i :$port > /dev/null; then
-        echo "Port $port is in use. Restarting..."
-        fuser -k $port/tcp
-        sleep 3
-    else
-        echo "Port $port is not in use."
-    fi
+  if netstat -atlpn | grep :$port > /dev/null; then
+    echo "Port $port is in use"
+    fuser -k $port/tcp
+    sleep 5
+  else
+    echo "Port $port is not in use."
+  fi
 done
 
-echo "Ports restarted."
+echo -e "\nPorts restarted.\n"
 
 # Checking for dependencies
-echo "Checking for dependencies"
+echo -e "\nChecking for dependencies\n"
 current_version=$(ansible --version | awk -F '[[:space:]]+' '/ansible/ {print $2; exit}')
 if [ -z "$current_version" ]; then
   echo "Ansible is not installed. Installing Ansible..."
@@ -39,8 +38,8 @@ else
 fi
 
 
-#Initialising CI server			--------------------------------------------
-echo "============Initialising CI server============"
+# Initialising CI server
+echo -e "\n============Initialising CI server============\n"
 cd integration-env
 
 # Check if the VM is already created
@@ -49,23 +48,16 @@ if vagrant status | grep -q "not created"; then
     vagrant up
 else
     echo "The VM exists. Halting, starting, and provisioning the VM..."
-    vagrant halt -f && vagrant up && vagrant provision
+    vagrant halt -f
+    vagrant up
+    vagrant provision
+    
+sleep 10
 fi
 
-# Wait for the VM to be up
-sleep 10
-
-
-# Check if URL is up
-url="http://192.168.56.5/gitlab"
-status_code=$(curl --write-out %{http_code} --silent --output /dev/null "$url")
-echo "Checking URL $url..."
-while [[ "$status_code" -ne 200 ]]; do
-echo "Waiting for $url to be up..."
-sleep 10
-status_code=$(curl --write-out %{http_code} --silent --output /dev/null "$url")
-done
-echo "$url is up and returned status code $status_code"
+# Wait for the VM to be up and gitlab url to be connected
+echo "Waiting for the VM to be up and gitlab url to be connected"
+sleep 60
 
 
 # Initializing Developer Environment
@@ -76,16 +68,16 @@ echo "$url is up and returned status code $status_code"
 # Wait for the script to finish
 #wait
 
+echo -e "\n============CI server initialised============\n"
+
 # End timer
 end_time=$(date +%s)
 duration_seconds=$((end_time - start_time))
 duration=$(echo "scale=2; $duration_seconds / 60" | bc)
 
 # Display time taken
-echo "Environment setup took $duration minutes."
-
-
-
+echo -e "Environment setup took $duration minutes.\n"
+sleep 5
 
 vagrant ssh
 

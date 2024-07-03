@@ -2,18 +2,61 @@
 
 - name: Add GitLab Runner repository
   shell: curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh | sudo bash
-  become: yes
 
 - name: Install GitLab Runner
   apt:
     name: gitlab-runner
     state: present
-  become: yes
 
-#- name: Create GitLab user
-#      shell: |
-#        gitlab-rails runner "
-#        user = User.new(
+# https://docs.gitlab.com/ee/user/profile/account/create_accounts.html
+- name: Create a new GitLab user
+  shell: |
+    sudo gitlab-rails runner -e production "
+      user = User.find_by(username: '{{ gitlab_user_username }}')
+      if user.nil?
+        user = User.new(
+          username: '{{ gitlab_user_username }}',
+          email: '{{ gitlab_user_email }}',
+          name: '{{ gitlab_user_name }}',
+          password: '{{ gitlab_user_password }}',
+          password_confirmation: '{{ gitlab_user_password }}'
+        )
+        user.skip_confirmation!
+        user.save!
+        puts \"Successfully created user: '{{ gitlab_user_username }}'\"
+      else
+        puts \"User '{{ gitlab_user_username }}' already exists.\"
+      end  
+    "
+
+# http://192.168.56.5/gitlab/
+
+#- name: Retrieve GitLab Runner registration token
+#  command: gitlab-rails runner -e production 'puts Gitlab::CurrentSettings.current_application_settings.runners_registration_token'
+#  register: registration_token_output
+#
+#- name: Set GitLab Runner registration token fact
+#  set_fact:
+#    registration_token: "{{ registration_token_output.stdout }}"
+#  when: registration_token_output.stdout is defined
+#
+#- name: Register GitLab Runner
+#  shell: |
+#    sudo gitlab-runner register --non-interactive \
+#      --url "http://192.168.56.5/gitlab/" \
+#      --registration-token "QfiYPycRqrn96qNgkHdz" \
+#      --description "[integration-server] docker" \
+#      --tag-list "integration" \
+#      --executor "docker" \
+#      --docker-image "alpine:latest"
+#      --run-untagged="true"
+#
+#  when: registration_token is defined
+#
+##- name: Create GitLab user
+##      shell: |
+##        gitlab-rails runner "
+##        user = User.new(
 #          username: 'user',
 #          email: 'user@example.com',
 #          name: 'user user',

@@ -10,7 +10,7 @@ GIT_ACCESS_TOKEN="AvuTEsPPoPo7_cd5a9EQ"
 # Init local git project
 cd $PROJECT_DIR
 git init
-git remote add origin http://${GIT_USERNAME}:${GIT_ACCESS_TOKEN}@${GIT_URL}
+git remote add origin http://$GIT_USERNAME:$GIT_ACCESS_TOKEN@$GIT_URL
 
 # Configure the git user
 git config --global user.name "$GIT_USERNAME"
