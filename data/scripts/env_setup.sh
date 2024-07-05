@@ -69,11 +69,11 @@ EOF
 
 sudo systemctl restart mysql
 
-if ! grep -q 'spring.datasource.url=jdbc:mysql://localhost:3306/e4l' /lu.uni.e4l.platform.api.dev/src/main/resources/application.properties; then
+if ! grep -q 'spring.datasource.url=jdbc:mysql://localhost:3306/e4l' /home/vagrant/e4l/lu.uni.e4l.platform.api.dev/src/main/resources/application.properties; then
   echo "++++++++++Configuring DB in application.properties...++++++++++"
-  echo "spring.datasource.url=jdbc:mysql://localhost:3306/e4l" | sudo tee -a /lu.uni.e4l.platform.api.dev/src/main/resources/application.properties
-  echo "spring.datasource.username=root" | sudo tee -a /lu.uni.e4l.platform.api.dev/src/main/resources/application.properties
-  echo "spring.datasource.password=12345678" | sudo tee -a /lu.uni.e4l.platform.api.dev/src/main/resources/application.properties
+  echo "spring.datasource.url=jdbc:mysql://localhost:3306/e4l" | sudo tee -a /home/vagrant/e4l/lu.uni.e4l.platform.api.dev/src/main/resources/application.properties
+  echo "spring.datasource.username=root" | sudo tee -a /home/vagrant/e4l/lu.uni.e4l.platform.api.dev/src/main/resources/application.properties
+  echo "spring.datasource.password=12345678" | sudo tee -a /home/vagrant/e4l/lu.uni.e4l.platform.api.dev/src/main/resources/application.properties
 
   # Create the database "e4l" in MySQL
   echo "++++++++++Creating DB...++++++++++"
@@ -84,7 +84,7 @@ fi
 
 # Configure .env file for frontend
 ENV_FILE="/home/vagrant/e4l/lu.uni.e4l.platform.frontend.dev/.env"
-API_URL="http://192.168.56.5:8080/e4lapi/"
+API_URL="http://192.168.56.5:8084/e4lapi/"
 if [ ! -f "$ENV_FILE" ]; then
   echo "++++++++++Configuring .env file for frontend...++++++++++"
   echo "API_URL=$API_URL" | sudo tee -a "$ENV_FILE"
@@ -93,11 +93,11 @@ else
 fi
 
 # Install GitLab and GitLab Runner
-echo "++++++++++Installing GitLab and GitLab Runner...++++++++++"
-curl -sS https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.deb.sh | sudo bash
-sudo apt-get install -y gitlab-ee
-
-curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh | sudo bash
-sudo apt-get install -y gitlab-runner
+#echo "++++++++++Installing GitLab and GitLab Runner...++++++++++"
+#curl -sS https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.deb.sh | sudo bash
+#sudo apt-get install -y gitlab-ee
+#
+#curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh | sudo bash
+#sudo apt-get install -y gitlab-runner
 
 echo "Provisioning complete."
