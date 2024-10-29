@@ -1,0 +1,49 @@
+.print-header {
+    display: none;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.print-logo {
+    max-width: 100px; /* Adjust size as needed */
+    height: auto;
+}
+
+.logo-text {
+    font-size: 20px; /* Adjust the font size as needed */
+    font-weight: bold; /* Optional: if you want bold text */
+    /* Add any additional styling for the text here */
+}
+
+.print-timestamp {
+    font-family: 'Arial', sans-serif;
+    font-size: 20px;
+    text-align: right;
+}
+
+@media print {
+    .print-header {
+        display: flex;
+    }
+
+    .print-logo, .print-timestamp {
+        display: block;
+    }
+
+  .no-print {
+     display: none;
+  }
+   #content-to-print, #content-to-print * {
+      visibility: visible;
+   }
+   #content-to-print {
+      position: relative;
+      left: 0;
+      top: 0;
+   }
+   .page-break {
+         page-break-after: always;
+      }
+   /* Other print-specific styles */
+}
