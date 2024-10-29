@@ -48,26 +48,36 @@ else
 fi
 
 # Install openjdk-20-jdk if not already installed
-if ! dpkg -s openjdk-17-jdk &> /dev/null; then
-  echo "++++++++++Installing openjdk-17-jdk...++++++++++"
-  sudo apt-get install -y openjdk-17-jdk
+if ! dpkg -s jdk-20 &> /dev/null; then
+  echo "++++++++++Installing jdk-20...++++++++++"
+  wget https://download.oracle.com/java/20/archive/jdk-20.0.2_linux-x64_bin.deb -O jdk-20.0.2.deb
+  sudo dpkg -i jdk-20.0.2.deb
+  sudo apt --fix-broken install -y
 else
-  echo "----------openjdk-19/20-jdk is already installed.----------"
+  echo "----------jdk-20 is already installed.----------"
 fi
+
+# Set up update-alternatives for jdk-20
+sudo update-alternatives --install "/usr/bin/java" "java" "/usr/lib/jvm/jdk-20/bin/java" 1
+sudo update-alternatives --set java /usr/lib/jvm/jdk-20/bin/java
+
+# Set JAVA_HOME environment variable
+echo "export JAVA_HOME=/usr/lib/jvm/jdk-20" | sudo tee -a /etc/profile
+source /etc/profile
+
 
 # Install Gradle 8.3 if not already installed
 if [ ! -d "/opt/gradle/gradle-8.3" ]; then
   echo "++++++++++Installing Gradle 8.3...++++++++++"
-  sudo apt-get install -y wget unzip
   wget https://services.gradle.org/distributions/gradle-8.3-bin.zip
   sudo mkdir /opt/gradle
   sudo unzip -d /opt/gradle gradle-8.3-bin.zip
   echo 'export PATH=$PATH:/opt/gradle/gradle-8.3/bin' | sudo tee -a /etc/profile.d/gradle.sh
-  source /etc/profile.d/gradle.sh
 else
   echo "----------Gradle 8.3 is already installed.----------"
 fi
 
+source /etc/profile.d/gradle.sh
 
 # Install MySQL server
 if ! dpkg -s mysql-server &> /dev/null; then
