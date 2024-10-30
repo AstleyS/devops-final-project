@@ -4,37 +4,7 @@
 sudo apt-get update -y
 
 # Install required packages
-sudo apt-get install -y curl software-properties-common apt-transport-https ca-certificates gnupg-agent python3 make wget unzip
-
- 
-############## FRONTEND ##############
-
-# Check if Node.js 15.14.0 is installed
-if ! command -v node &> /dev/null || [[ $(node -v) != v15.14.0 ]]; then
-  echo "++++++++++ Installing Node.js 15.14.0... ++++++++++"  
-  # Install nvm if not already installed
-  if ! command -v nvm &> /dev/null; then
-    echo "++++++++++ Installing nvm... ++++++++++"
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
-    # Load nvm into the current shell session
-    source ~/.nvm/nvm.sh
-  fi
-
-  # Install Node.js 15.14.0 using nvm
-  nvm install 15.14.0
-  nvm use 15.14.0
-  nvm alias default 15.14.0
-else
-  echo "---------- Node.js 15.14.0 is already installed. ----------"
-fi
-
-# Check if npm 7.7.6 is installed
-if [[ $(npm -v) != 7.7.6 ]]; then
-  echo "++++++++++ Installing npm 7.7.6... ++++++++++"
-  npm install -g npm@7.7.6
-else
-  echo "---------- npm 7.7.6 is already installed. ----------"
-fi
+sudo apt-get install -y curl software-properties-common apt-transport-https ca-certificates gnupg-agent python3 make wget unzip dpkg
 
 
 ############## BACKEND ############## 
@@ -100,7 +70,44 @@ else
   echo "----------mysql-server is already installed.----------"
 fi
 
+# Define your database properties
+DB_URL="jdbc:mysql://localhost:3306/e4l"
+DB_USERNAME="root"
+DB_PASSWORD="12345678"
 
+PROPERTIES_FILE="/home/vagrant/e4l/src/main/resources/application.properties"
+
+# Check and replace each property line if it exists, or add it if it doesn't
+if grep -q "^spring.datasource.url=" "$PROPERTIES_FILE"; then
+    sed -i "s|^spring.datasource.url=.*|spring.datasource.url=${DB_URL}|" "$PROPERTIES_FILE"
+else
+    echo "spring.datasource.url=${DB_URL}" >> "$PROPERTIES_FILE"
+fi
+
+if grep -q "^spring.datasource.username=" "$PROPERTIES_FILE"; then
+    sed -i "s|^spring.datasource.username=.*|spring.datasource.username=${DB_USERNAME}|" "$PROPERTIES_FILE"
+else
+    echo "spring.datasource.username=${DB_USERNAME}" >> "$PROPERTIES_FILE"
+fi
+
+if grep -q "^spring.datasource.password=" "$PROPERTIES_FILE"; then
+    sed -i "s|^spring.datasource.password=.*|spring.datasource.password=${DB_PASSWORD}|" "$PROPERTIES_FILE"
+else
+    echo "spring.datasource.password=${DB_PASSWORD}" >> "$PROPERTIES_FILE"
+fi
+
+
+# Create the e4l database
+echo "++++++++++Creating e4l database...++++++++++"
+mysql -u root -p12345678 -e "CREATE DATABASE IF NOT EXISTS e4l;"
+
+
+# Grant permissions for Gradle wrapper and run backend
+echo "++++++++++Running backend setup commands...++++++++++"
+cd /home/vagrant/e4l/
+./gradlew wrapper
+chmod +x gradlew
+./gradlew clean build
 
 ## Configure MySQL and application.properties
 #echo "++++++++++Configuring MySQL and application.properties...++++++++++"

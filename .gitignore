@@ -1,6 +1,8 @@
 *.log
 notes.md
 
+.vagrant
+
 # Backend gitignore
 # Gradle directories
 data/lu.uni.e4l.platform.api.dev/.gradle/
