@@ -1,7 +1,7 @@
 *.log
 notes.md
 
-.vagrant
+.vagrant/
 
 # Backend gitignore
 # Gradle directories

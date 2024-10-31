@@ -1,44 +1,55 @@
 #!/bin/bash
 
+# Source global variables
+source /home/vagrant/scripts/config_global_vars.sh
+
 # Update package lists
 sudo apt-get update -y
 
-# Install required packages
-sudo apt-get install -y curl software-properties-common apt-transport-https ca-certificates gnupg-agent python3 make wget unzip dpkg
+# Install basic packages
+sudo apt-get install -y "${BASIC_PACKAGES[@]}"
 
- 
 ############## FRONTEND ##############
 
-# Check if Node.js 15.14.0 is installed
-if ! command -v node &> /dev/null || [[ $(node -v) != v15.14.0 ]]; then
-  echo "++++++++++ Installing Node.js 15.14.0... ++++++++++"  
+# Check if Node.js is installed
+if ! command -v node &> /dev/null || [[ $(node -v) != v$NODE_VERSION ]]; then
+  echo "++++++++++ Installing Node.js $NODE_VERSION... ++++++++++"
   # Install nvm if not already installed
   if ! command -v nvm &> /dev/null; then
     echo "++++++++++ Installing nvm... ++++++++++"
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
-    # Load nvm into the current shell session
-    source ~/.nvm/nvm.sh
+    # Add nvm to bashrc for persistence
+    echo 'export NVM_DIR="$HOME/.nvm"' >> ~/.bashrc
+    echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> ~/.bashrc
+    echo '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"' >> ~/.bashrc
   fi
 
-  # Install Node.js 15.14.0 using nvm
-  nvm install 15.14.0
-  nvm use 15.14.0
-  nvm alias default 15.14.0
+  # Load nvm into the current shell session
+  source ~/.nvm/nvm.sh
+  source ~/.bashrc
+  
+  # Install and use Node.js
+  nvm install $NODE_VERSION
+  nvm use $NODE_VERSION
+  nvm alias default $NODE_VERSION
 else
-  echo "---------- Node.js 15.14.0 is already installed. ----------"
+  echo "---------- Node.js $NODE_VERSION is already installed. ----------"
 fi
 
-# Check if npm 7.7.6 is installed
-if [[ $(npm -v) != 7.7.6 ]]; then
-  echo "++++++++++ Installing npm 7.7.6... ++++++++++"
-  npm install -g npm@7.7.6
+# Load nvm into the current shell session
+    source ~/.nvm/nvm.sh
+    source ~/.bashrc
+
+# Check if npm is installed
+if [[ $(npm -v) != $NPM_VERSION ]]; then
+  echo "++++++++++ Installing npm $NPM_VERSION... ++++++++++"
+  sudo npm install -g npm@$NPM_VERSION
 else
-  echo "---------- npm 7.7.6 is already installed. ----------"
+  echo "---------- npm $NPM_VERSION is already installed. ----------"
 fi
 
 ## Configure .env file for frontend
 ENV_FILE="/home/vagrant/e4l/.env"
-API_URL="http://192.168.56.11:3001/e4lapi/"
 
 if [ ! -f "$ENV_FILE" ]; then
   echo "++++++++++Configuring .env file for frontend...++++++++++"
@@ -51,14 +62,3 @@ else
     echo "API_URL=$API_URL" | sudo tee -a "$ENV_FILE"
   fi
 fi
-
-#
-## Install GitLab and GitLab Runner
-##echo "++++++++++Installing GitLab and GitLab Runner...++++++++++"
-##curl -sS https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.deb.sh | sudo bash
-##sudo apt-get install -y gitlab-ee
-##
-##curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh | sudo bash
-##sudo apt-get install -y gitlab-runner
-#
-#echo "Provisioning complete."
