@@ -126,9 +126,6 @@
     regexp: '^spring.datasource.password='
     line: "spring.datasource.password={{ DB_PASSWORD }}"
 
-- name: Create e4l database
-  mysql_db:
-    name: e4l
-    state: present 
-    login_user: "{{ DB_USERNAME }}"
-    login_password: "{{ DB_PASSWORD }}"
+- name: Create e4l database 
+  ansible.builtin.command: "mysql -u {{ DB_USERNAME }} -p{{ DB_PASSWORD }} -e 'CREATE DATABASE IF NOT EXISTS e4l;'"
+  become: yes

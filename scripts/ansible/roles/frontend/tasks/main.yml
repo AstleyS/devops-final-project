@@ -1,7 +1,3 @@
----
-
-# Frontend Tasks
-
 - name: Update package list
   apt:
     update_cache: yes
@@ -13,36 +9,50 @@
 
 - name: Unzip frontend source code
   shell: |
-    rm -rf /home/vagrant/e4l/lu.uni.e4l.platform.frontend.dev/*
-    unzip -o /home/vagrant/e4l/lu.uni.e4l.platform.frontend.dev.zip -d /home/vagrant/e4l/lu.uni.e4l.platform.frontend.dev/
+    rm -rf {{ FRONTEND_DIR }}/*
+    unzip -o {{ FRONTEND_DIR }}.zip -d /home/vagrant/e4l/
   args:
     executable: /bin/bash
 
-- name: Install nvm
-  shell: |
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
-  args:
-    executable: /bin/bash
+- name: Install dependencies for building from source
+  apt:
+    name:
+      - curl
+      - gnupg
+      - lsb-release
+    state: present
 
-- name: Install specific Node.js version
-  shell: |
-    export NVM_DIR="$HOME/.nvm"
-    . "$NVM_DIR/nvm.sh"  # Source nvm to use it
-    nvm install 15.14.0
-  args:
-    executable: /bin/bash
+- name: Download Node.js 15.4.x binaries
+  get_url:
+    url: "https://nodejs.org/dist/v15.4.0/node-v15.4.0-linux-x64.tar.xz"
+    dest: "/tmp/node-v15.4.0-linux-x64.tar.xz"
+
+- name: Extract Node.js binaries
+  unarchive:
+    src: "/tmp/node-v15.4.0-linux-x64.tar.xz"
+    dest: "/usr/local/"
+    remote_src: yes
+
+- name: Create symbolic links for node and npm
+  file:
+    src: "/usr/local/node-v15.4.0-linux-x64/bin/{{ item }}"
+    dest: "/usr/local/bin/{{ item }}"
+    state: link
+  with_items:
+    - node
+    - npm
+
+- name: Install Node.js 15.x
+  apt:
+    name: nodejs
+    state: present
 
 - name: Install specific npm version
-  shell: |
-    export NVM_DIR="$HOME/.nvm"
-    . "$NVM_DIR/nvm.sh"  # Source nvm to use it
-    npm install -g npm@7.7.6
-  args:
-    executable: /bin/bash
+  command: "npm install -g npm@7.7.6"
 
 - name: Configure .env file for frontend
   lineinfile:
-    path: "/home/vagrant/e4l/.env"
+    path: "{{ FRONTEND_DIR }}/.env"
     regexp: '^API_URL='
     line: "API_URL={{ API_URL }}"
     create: yes

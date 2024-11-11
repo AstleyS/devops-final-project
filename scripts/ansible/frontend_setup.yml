@@ -15,11 +15,11 @@
     - include_role:
         name: frontend 
 
-    - include_role:
-        name: gitlab
+    #- include_role:
+    #    name: gitlab
 
-    - include_role:
-        name: gitlab_config
+    #- include_role:
+    #    name: gitlab_config
 
-    - include_role:
-        name: docker
+    #- include_role:
+    #    name: docker

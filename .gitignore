@@ -1,6 +1,8 @@
 *.log
 notes.md
 
+env/
+
 .vagrant/
 
 # Backend gitignore

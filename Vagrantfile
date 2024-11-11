@@ -18,8 +18,8 @@ Vagrant.configure("2") do |config|
 
     # VirtualBox provider specific configuration
     backend.vm.provider "virtualbox" do |vb|
-      vb.memory = "2048" 
-      vb.cpus = 1 
+      vb.memory = "4096" 
+      vb.cpus = 2 
     end
 
     config.vm.provision "shell", inline: <<-SHELL
@@ -47,8 +47,8 @@ Vagrant.configure("2") do |config|
 
     # VirtualBox provider specific configuration
     frontend.vm.provider "virtualbox" do |vb|
-      vb.memory = "2048" 
-      vb.cpus = 1        
+      vb.memory = "4096" 
+      vb.cpus = 2        
     end
 
     # Provisioning using Ansible for frontend
