@@ -1,5 +1,4 @@
 ---
-
 # Backend Tasks
 
 - name: Update package list
@@ -13,39 +12,91 @@
 
 - name: Unzip backend source code
   shell: |
-    rm -rf /home/vagrant/e4l/lu.uni.e4l.platform.api.dev/*
-    unzip -o /home/vagrant/e4l/lu.uni.e4l.platform.api.dev.zip -d /home/vagrant/e4l/
+    rm -rf {{ BACKEND_DIR }}/*
+    unzip -o {{ BACKEND_DIR }}.zip -d /home/vagrant/e4l/
   args:
     executable: /bin/bash
 
-- name: Install JDK
-  apt:
-    name: "openjdk-{{ JDK_VERSION }}-jdk"
-    state: present
+# JAVA CONFIGURATION
 
-- name: Set JAVA_HOME environment variable
-  lineinfile:
-    path: /etc/profile.d/java.sh
-    line: "export JAVA_HOME=/usr/lib/jvm/java-{{ JDK_VERSION }}-openjdk-amd64"
-    create: yes
+- name: Check if Java 20.0.2 is already installed
+  ansible.builtin.command:
+    cmd: "java -version"
+  register: java_version_output
+  ignore_errors: yes
 
-- name: Install Gradle
-  get_url:
-    url: "https://services.gradle.org/distributions/gradle-{{ GRADLE_VERSION }}-bin.zip"
-    dest: /tmp/gradle-{{ GRADLE_VERSION }}-bin.zip
+- name: Install Java if version is not 20.0.2
+  when: java_version_output.rc != 0 or "'20.0.2' not in java_version_output.stdout"
+  block:
+    - name: Download Java 20.0.2 .deb package
+      ansible.builtin.command:
+        cmd: "wget https://download.oracle.com/java/20/archive/jdk-20.0.2_linux-x64_bin.deb -O /tmp/jdk-20.0.2.deb"
 
-- name: Unzip Gradle
-  unarchive:
-    src: /tmp/gradle-{{ GRADLE_VERSION }}-bin.zip
-    dest: /opt/gradle/
-    remote_src: yes
+    - name: Install the Java .deb package
+      ansible.builtin.command:
+        cmd: "sudo dpkg -i /tmp/jdk-20.0.2.deb"
+      ignore_errors: yes
 
-- name: Add Gradle to PATH
-  lineinfile:
-    path: /etc/profile.d/gradle.sh
-    line: "export PATH=$PATH:/opt/gradle/gradle-{{ GRADLE_VERSION }}/bin"
-    create: yes
+    - name: Fix missing dependencies
+      ansible.builtin.command:
+        cmd: "sudo apt --fix-broken install -y"
 
+    - name: Install Java 20 as an alternative
+      ansible.builtin.command:
+        cmd: "sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/jdk-20/bin/java 1"
+
+    - name: Set Java 20 as the default Java version
+      ansible.builtin.command:
+        cmd: "sudo update-alternatives --set java /usr/lib/jvm/jdk-20/bin/java"
+
+    - name: Set JAVA_HOME environment variable
+      ansible.builtin.shell:
+        cmd: "echo 'export JAVA_HOME=/usr/lib/jvm/jdk-20' | sudo tee -a /etc/profile"
+
+    - name: Set JAVA_HOME in /etc/profile
+      ansible.builtin.lineinfile:
+        path: "/etc/profile"
+        line: "export JAVA_HOME=/usr/lib/jvm/jdk-20"
+        create: yes
+
+# GRADLE CONFIGURATION
+- name: Check if Gradle is already installed
+  stat:
+    path: "/opt/gradle/gradle-{{ GRADLE_VERSION }}"
+  register: gradle_stat
+
+- name: Install Gradle if not already installed
+  when: gradle_stat.stat.exists == false
+  block:
+    - name: Download Gradle distribution
+      get_url:
+        url: "https://services.gradle.org/distributions/gradle-{{ GRADLE_VERSION }}-bin.zip"
+        dest: "/tmp/gradle-{{ GRADLE_VERSION }}-bin.zip"
+
+    - name: Create /opt/gradle directory
+      file:
+        path: "/opt/gradle"
+        state: directory
+        mode: "0755"
+
+    - name: Unzip Gradle
+      unarchive:
+        src: "/tmp/gradle-{{ GRADLE_VERSION }}-bin.zip"
+        dest: "/opt/gradle/"
+        remote_src: yes
+
+    - name: Add Gradle to PATH
+      lineinfile:
+        path: "/etc/profile.d/gradle.sh"
+        line: "export PATH=$PATH:/opt/gradle/gradle-{{ GRADLE_VERSION }}/bin"
+        create: yes
+
+    - name: Clean up downloaded Gradle zip file
+      file:
+        path: "/tmp/gradle-{{ GRADLE_VERSION }}-bin.zip"
+        state: absent
+
+# MYSQL
 - name: Install MySQL server
   apt:
     name: mysql-server
@@ -57,16 +108,27 @@
     state: started
     enabled: true
 
-- name: Set up application.properties
-  blockinfile:
-    path: "/home/vagrant/e4l/src/main/resources/application.properties"
-    block: |
-      spring.datasource.url={{ DB_URL }}
-      spring.datasource.username={{ DB_USERNAME }}
-      spring.datasource.password={{ DB_PASSWORD }}
+- name: Replace spring.datasource.url in application.properties
+  lineinfile:
+    path: "{{ BACKEND_DIR }}/src/main/resources/application.properties"
+    regexp: '^spring.datasource.url='
+    line: "spring.datasource.url={{ DB_URL }}"
+
+- name: Replace spring.datasource.username in application.properties
+  lineinfile:
+    path: "{{ BACKEND_DIR }}/src/main/resources/application.properties"
+    regexp: '^spring.datasource.username='
+    line: "spring.datasource.username={{ DB_USERNAME }}"
+
+- name: Replace spring.datasource.password in application.properties
+  lineinfile:
+    path: "{{ BACKEND_DIR }}/src/main/resources/application.properties"
+    regexp: '^spring.datasource.password='
+    line: "spring.datasource.password={{ DB_PASSWORD }}"
 
 - name: Create e4l database
   mysql_db:
     name: e4l
-    state: present
-  when: ansible_facts.mysql_server
+    state: present 
+    login_user: "{{ DB_USERNAME }}"
+    login_password: "{{ DB_PASSWORD }}"

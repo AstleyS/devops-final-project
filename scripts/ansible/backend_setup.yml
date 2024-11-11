@@ -9,10 +9,9 @@
   become_method: sudo
     
   vars_files:
-    - config_global_vars.yml
+    - ./config_global_vars.yml
       
   tasks:
-
     - include_role:
         name: backend 
 

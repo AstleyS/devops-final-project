@@ -28,12 +28,13 @@ DB_PASSWORD: "12345678"
 # Backend configuration
 BACKEND_IP: "192.168.56.10"
 FRONTED_PORT: 3010
-
+BACKEND_DIR: /home/vagrant/e4l/lu.uni.e4l.platform.api.dev
 
 # Frontend configuration
 FRONTEND_IP: "192.168.56.11"
 FRONTED_PORT: 8088
 API_URL: "http://{{ FRONTEND_IP }}:8080/e4lapi/"
+FRONTEND_DIR: /home/vagrant/e4l/lu.uni.e4l.platform.frontend.dev
 
 vHome: /home/vagrant
 gitlab_config_external_url: http://192.168.58.9/gitlab

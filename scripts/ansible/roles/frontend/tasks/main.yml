@@ -21,24 +21,13 @@
 - name: Install nvm
   shell: |
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
-    echo 'export NVM_DIR="$HOME/.nvm"' >> ~/.bashrc
-    echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> ~/.bashrc
-    echo '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"' >> ~/.bashrc
   args:
     executable: /bin/bash
-
-- name: Load nvm
-  shell: |
-    export NVM_DIR="$HOME/.nvm"
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-  args:
-    executable: /bin/bash
-  register: nvm_loaded
 
 - name: Install specific Node.js version
   shell: |
     export NVM_DIR="$HOME/.nvm"
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    . "$NVM_DIR/nvm.sh"  # Source nvm to use it
     nvm install 15.14.0
   args:
     executable: /bin/bash
@@ -46,7 +35,7 @@
 - name: Install specific npm version
   shell: |
     export NVM_DIR="$HOME/.nvm"
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    . "$NVM_DIR/nvm.sh"  # Source nvm to use it
     npm install -g npm@7.7.6
   args:
     executable: /bin/bash
@@ -54,5 +43,6 @@
 - name: Configure .env file for frontend
   lineinfile:
     path: "/home/vagrant/e4l/.env"
+    regexp: '^API_URL='
     line: "API_URL={{ API_URL }}"
     create: yes
