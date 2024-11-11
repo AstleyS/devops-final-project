@@ -1,0 +1,58 @@
+---
+
+# Frontend Tasks
+
+- name: Update package list
+  apt:
+    update_cache: yes
+
+- name: Install basic packages
+  apt:
+    name: "{{ BASIC_PACKAGES }}"
+    state: present
+
+- name: Unzip frontend source code
+  shell: |
+    rm -rf /home/vagrant/e4l/lu.uni.e4l.platform.frontend.dev/*
+    unzip -o /home/vagrant/e4l/lu.uni.e4l.platform.frontend.dev.zip -d /home/vagrant/e4l/lu.uni.e4l.platform.frontend.dev/
+  args:
+    executable: /bin/bash
+
+- name: Install nvm
+  shell: |
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
+    echo 'export NVM_DIR="$HOME/.nvm"' >> ~/.bashrc
+    echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> ~/.bashrc
+    echo '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"' >> ~/.bashrc
+  args:
+    executable: /bin/bash
+
+- name: Load nvm
+  shell: |
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+  args:
+    executable: /bin/bash
+  register: nvm_loaded
+
+- name: Install specific Node.js version
+  shell: |
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    nvm install 15.14.0
+  args:
+    executable: /bin/bash
+
+- name: Install specific npm version
+  shell: |
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    npm install -g npm@7.7.6
+  args:
+    executable: /bin/bash
+
+- name: Configure .env file for frontend
+  lineinfile:
+    path: "/home/vagrant/e4l/.env"
+    line: "API_URL={{ API_URL }}"
+    create: yes

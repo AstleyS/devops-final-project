@@ -1,0 +1,72 @@
+---
+
+# Backend Tasks
+
+- name: Update package list
+  apt:
+    update_cache: yes
+
+- name: Install basic packages
+  apt:
+    name: "{{ BASIC_PACKAGES }}"
+    state: present
+
+- name: Unzip backend source code
+  shell: |
+    rm -rf /home/vagrant/e4l/lu.uni.e4l.platform.api.dev/*
+    unzip -o /home/vagrant/e4l/lu.uni.e4l.platform.api.dev.zip -d /home/vagrant/e4l/
+  args:
+    executable: /bin/bash
+
+- name: Install JDK
+  apt:
+    name: "openjdk-{{ JDK_VERSION }}-jdk"
+    state: present
+
+- name: Set JAVA_HOME environment variable
+  lineinfile:
+    path: /etc/profile.d/java.sh
+    line: "export JAVA_HOME=/usr/lib/jvm/java-{{ JDK_VERSION }}-openjdk-amd64"
+    create: yes
+
+- name: Install Gradle
+  get_url:
+    url: "https://services.gradle.org/distributions/gradle-{{ GRADLE_VERSION }}-bin.zip"
+    dest: /tmp/gradle-{{ GRADLE_VERSION }}-bin.zip
+
+- name: Unzip Gradle
+  unarchive:
+    src: /tmp/gradle-{{ GRADLE_VERSION }}-bin.zip
+    dest: /opt/gradle/
+    remote_src: yes
+
+- name: Add Gradle to PATH
+  lineinfile:
+    path: /etc/profile.d/gradle.sh
+    line: "export PATH=$PATH:/opt/gradle/gradle-{{ GRADLE_VERSION }}/bin"
+    create: yes
+
+- name: Install MySQL server
+  apt:
+    name: mysql-server
+    state: present
+
+- name: Ensure MySQL service is started and enabled
+  service:
+    name: mysql
+    state: started
+    enabled: true
+
+- name: Set up application.properties
+  blockinfile:
+    path: "/home/vagrant/e4l/src/main/resources/application.properties"
+    block: |
+      spring.datasource.url={{ DB_URL }}
+      spring.datasource.username={{ DB_USERNAME }}
+      spring.datasource.password={{ DB_PASSWORD }}
+
+- name: Create e4l database
+  mysql_db:
+    name: e4l
+    state: present
+  when: ansible_facts.mysql_server
