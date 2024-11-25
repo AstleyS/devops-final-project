@@ -5,6 +5,9 @@ env/
 
 .vagrant/
 
+data/e4l/lu.uni.e4l.platform.api.dev/
+data/e4l/lu.uni.e4l.platform.frontend.dev/
+
 # Backend gitignore
 # Gradle directories
 data/lu.uni.e4l.platform.api.dev/.gradle/

@@ -4,13 +4,13 @@
   ansible.builtin.lineinfile:
     path: /etc/gitlab/gitlab.rb
     regexp: "^external_url 'http://.*"
-    line: "external_url '{{ gitlab_config_external_url }}'"
+    line: "external_url '{{ API_URL_INTEGRATION }}'"
     state: present
 
 - name: Set puma port in gitlab.rb
   ansible.builtin.lineinfile:
     path: /etc/gitlab/gitlab.rb
-    line: "puma['port'] = {{ gitlab_config_port }}"
+    line: "puma['port'] = {{ INTEGRATION_PORT }}"
     insertafter: "^external_url" 
 
 

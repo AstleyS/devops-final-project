@@ -18,7 +18,6 @@
     executable: /bin/bash
 
 # JAVA CONFIGURATION
-
 - name: Check if Java 20.0.2 is already installed
   ansible.builtin.command:
     cmd: "java -version"

@@ -1,0 +1,31 @@
+# vim: ts=2
+---
+
+# Backend
+
+- hosts: all
+  remote_user: vagrant
+  become: yes
+  become_method: sudo
+    
+  vars_files:
+    - ../config_global_vars.yml
+      
+  tasks:
+    - include_role:
+        name: ../roles/backend 
+
+    - include_role:
+        name: ../roles/frontend
+
+    - include_role:
+        name: ../roles/gitlab
+
+    - include_role:
+        name: ../roles/gitlab_config
+
+    - include_role:
+        name: ../roles/gitlab_runner
+
+    - include_role:
+        name: ../roles/docker
