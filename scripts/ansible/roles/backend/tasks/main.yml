@@ -10,13 +10,6 @@
     name: "{{ BASIC_PACKAGES }}"
     state: present
 
-- name: Unzip backend source code
-  shell: |
-    rm -rf {{ BACKEND_DIR }}/*
-    unzip -o {{ BACKEND_DIR }}.zip -d /home/vagrant/e4l/
-  args:
-    executable: /bin/bash
-
 # JAVA CONFIGURATION
 - name: Check if Java 20.0.2 is already installed
   ansible.builtin.command:

@@ -21,31 +21,50 @@
     user.save!
     EOF
 
-- name: Create GitLab User1
-      ansible.builtin.shell: |
-        sudo gitlab-rails console <<EOF
-        u = User.new(username: 'user', email: 'user@example.com', name: 'User', password: 'vagrant1234', password_confirmation: 'vagrant1234')
-        u.assign_personal_namespace(Organizations::Organization.default_organization)
-        u.skip_confirmation! # Skip confirmation if desired
-        u.save!
-        EOF
+- name: Create GitLab Backend User1
+  ansible.builtin.shell: |
+    sudo gitlab-rails console <<EOF
+    u = User.new(username: 'B_user', email: 'b_user@example.com', name: 'B_User', password: 'vagrant1234', password_confirmation: 'vagrant1234')
+    u.assign_personal_namespace(Organizations::Organization.default_organization)
+    u.skip_confirmation! # Skip confirmation if desired
+    u.save!
+    EOF
 
-- name: Create GitLab User2
-      ansible.builtin.shell: |
-        sudo gitlab-rails console <<EOF
-        u = User.new(username: 'user2', email: 'user2@example.com', name: 'User2', password: 'vagrant1234', password_confirmation: 'vagrant1234')
-        u.assign_personal_namespace(Organizations::Organization.default_organization)
-        u.skip_confirmation! # Skip confirmation if desired
-        u.save!
-        EOF
+- name: Create GitLab Backend User2
+  ansible.builtin.shell: |
+    sudo gitlab-rails console <<EOF
+    u = User.new(username: 'B_user2', email: 'b_user2@example.com', name: 'B_User2', password: 'vagrant1234', password_confirmation: 'vagrant1234')
+    u.assign_personal_namespace(Organizations::Organization.default_organization)
+    u.skip_confirmation! # Skip confirmation if desired
+    u.save!
+    EOF
 
-- name: Register GitLab Runner
-      ansible.builtin.shell: |
-        gitlab-runner register --non-interactive \
-          --url {{ API_URL_INTEGRATION }} \
-          --registration-token $GITLAB_PROJECT_TOKEN \
-          --description "[integration-server] docker" \
-          --tag-list "integration" \
-          --executor "docker" \
-          --docker-image "ubuntu:22.04"
-        
+
+- name: Create GitLab Frontend User1
+  ansible.builtin.shell: |
+    sudo gitlab-rails console <<EOF
+    u = User.new(username: 'F_user', email: 'F_user@example.com', name: 'F_User', password: 'vagrant1234', password_confirmation: 'vagrant1234')
+    u.assign_personal_namespace(Organizations::Organization.default_organization)
+    u.skip_confirmation! # Skip confirmation if desired
+    u.save!
+    EOF
+
+- name: Create GitLab Frontend User2
+  ansible.builtin.shell: |
+    sudo gitlab-rails console <<EOF
+    u = User.new(username: 'F_user2', email: 'F_user2@example.com', name: 'F_User2', password: 'vagrant1234', password_confirmation: 'vagrant1234')
+    u.assign_personal_namespace(Organizations::Organization.default_organization)
+    u.skip_confirmation! # Skip confirmation if desired
+    u.save!
+    EOF
+
+
+#- name: Register GitLab Runner
+#      ansible.builtin.shell: |
+#        gitlab-runner register --non-interactive \
+#          --url {{ API_URL_INTEGRATION }} \
+#          --registration-token $GITLAB_PROJECT_TOKEN \
+#          --description "[integration-server] docker" \
+#          --tag-list "integration" \
+#          --executor "docker" \
+#          --docker-image "ubuntu:22.04"

@@ -85,6 +85,23 @@ Deployments to production often done with utmost care.
 ### Production Environment
 
 
+## Workflow
+
+1. Initiate Integration Environment
+    - Create project on Gitlab (manually)
+    - Configure Gitlab (get token manually) and register Runner (automatically)
+    - Define pipeline 
+
+2. Initiate Development Environment
+    - Upload project to Gitlab
+
+3. Initiate Staging Environment
+    - Test candidate/product
+    - Deploy to production
+
+4. Initiate Production Environment
+    - Release Product
+
 # Project Structure
 ```
 project/
@@ -136,3 +153,7 @@ git commit -m "Initial commit"
 git push --set-upstream origin main
 
 export GITLAB_PROJECT_TOKEN="your_token_here"
+
+
+
+

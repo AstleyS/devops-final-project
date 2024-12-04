@@ -1,0 +1,13 @@
+stages:
+  - build
+  #- test
+  #- deploy
+
+build_backend:
+  stage: build
+  script:
+    - gradle wrapper
+    - chmod +x gradlew
+    - ./gradlew clean
+    - ./gradlew build
+    - ./gradlew bootRun

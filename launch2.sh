@@ -11,17 +11,14 @@ FRONTEND_DIR="/home/vagrant/e4l/lu.uni.e4l.platform.frontend.dev"
 
 INTEGRATION_IP="192.168.56.12"
 INTEGRATION_PORT=8089
-INTEGRATION_DIR="/home/vagrant/integration"
 INTEGRATION_GITLAB="http://${INTEGRATION_IP}/gitlab"
 
 
 STAGING_IP="192.168.56.13"
 STAGING_PORT=8090
-STAGING_DIR="/home/vagrant/staging"
 
 PRODUCTION_IP="192.168.56.14"
 PRODUCTION_PORT=8091
-PRODUCTION_DIR="/home/vagrant/production"
 
 # Check if a service is running
 check_service() {
@@ -49,11 +46,18 @@ check_gitlab() {
   echo "GitLab instance at ${url} is reachable!"
 }
 
+# Start timer
+start_time=$(date +%s)
 
 # Start Integration Environment
 echo "Starting Integration Environment..."
 vagrant up integration
 check_gitlab $INTEGRATION_GITLAB
+
+# End timer
+end_time=$(date +%s)
+duration_seconds=$((end_time - start_time))
+duration=$(echo "scale=2; $duration_seconds / 60" | bc)
 
 
 # Start Development Environment
