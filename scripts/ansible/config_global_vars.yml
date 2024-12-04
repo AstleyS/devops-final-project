@@ -59,4 +59,4 @@ vHome: /home/vagrant
 gitlab_config_external_url: "http://{{ FRONTEND_IP }}/gitlab"
 gitlab_config_port: 8088
 
-TOKEN: "glrt-t3_5amNS6dFsFbjY2Umo6oW"
+TOKEN: ${GITLAB_PROJECT_TOKEN} # Saved in variable environment

@@ -1,7 +1,7 @@
 # vim: ts=2
 ---
 
-# Backend
+# Integration Server
 
 - hosts: all
   remote_user: vagrant

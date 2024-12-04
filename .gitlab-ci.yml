@@ -1,5 +1,4 @@
 stages:
-  - setup
   - build
 
 variables:
@@ -12,43 +11,12 @@ variables:
   NODE_VERSION: "15.14.0"
   NPM_VERSION: "7.7.6"
 
-setup_environment:
-  stage: setup
-  image: ubuntu:20.04
-  before_script:
-    - apt-get update
-    - apt-get install -y ansible wget unzip curl
-  script:
-    # Backend Setup
-    - apt-get install -y openjdk-20-jdk mysql-server
-    - wget -q https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip -O /tmp/gradle.zip
-    - unzip -o /tmp/gradle.zip -d /opt/gradle/
-    - export PATH=$PATH:/opt/gradle/gradle-${GRADLE_VERSION}/bin
-    - rm -rf ${BACKEND_DIR}/*
-    - unzip -o ${BACKEND_DIR}.zip -d /home/vagrant/e4l/
-
-    # MySQL Setup
-    - service mysql start
-    - mysql -u ${DB_USERNAME} -p${DB_PASSWORD} -e "CREATE DATABASE IF NOT EXISTS e4l;"
-    - sed -i "s|^spring.datasource.url=.*|spring.datasource.url=${DB_URL}|" ${BACKEND_DIR}/src/main/resources/application.properties
-    - sed -i "s|^spring.datasource.username=.*|spring.datasource.username=${DB_USERNAME}|" ${BACKEND_DIR}/src/main/resources/application.properties
-    - sed -i "s|^spring.datasource.password=.*|spring.datasource.password=${DB_PASSWORD}|" ${BACKEND_DIR}/src/main/resources/application.properties
-
-    # Frontend Setup
-    - apt-get install -y curl gnupg lsb-release
-    - curl -fsSL https://deb.nodesource.com/setup_15.x | bash -
-    - apt-get install -y nodejs
-    - npm install -g npm@${NPM_VERSION}
-    - rm -rf ${FRONTEND_DIR}/*
-    - unzip -o ${FRONTEND_DIR}.zip -d /home/vagrant/e4l/
-    - echo "API_URL=${API_URL}" > ${FRONTEND_DIR}/.env
-
 build_backend:
   stage: build
   image: openjdk:20
   script:
     - cd ${BACKEND_DIR}
-    - ./gradlew build
+    - ./gradlew clean build
     - echo "Backend build complete."
 
 build_frontend:

@@ -12,6 +12,8 @@ FRONTEND_DIR="/home/vagrant/e4l/lu.uni.e4l.platform.frontend.dev"
 INTEGRATION_IP="192.168.56.12"
 INTEGRATION_PORT=8089
 INTEGRATION_DIR="/home/vagrant/integration"
+INTEGRATION_GITLAB="http://${INTEGRATION_IP}/gitlab"
+
 
 STAGING_IP="192.168.56.13"
 STAGING_PORT=8090
@@ -28,27 +30,40 @@ check_service() {
   echo "Checking service at ${ip}:${port}..."
   
   while ! netstat -an | grep -q "${ip}:${port}"; do
-    echo "Service at ${ip}:${port} not available. Retrying in 5 seconds..."
-    sleep 5
+    echo "Service at ${ip}:${port} not available. Retrying in 15 seconds..."
+    sleep 15
   done
   echo "Service at ${ip}:${port} is up!"
+}
+
+# Function to check if GitLab is reachable
+check_gitlab() {
+  local url="$1/users/sign_in"
+  echo "Checking GitLab instance at ${url}..."
+
+  # Retry until the GitLab URL responds
+  while ! curl -s --head --request GET "$url" | grep "200 OK" &>/dev/null; do
+    echo "GitLab at ${url} not available. Retrying in 15 seconds..."
+    sleep 15
+  done
+  echo "GitLab instance at ${url} is reachable!"
 }
 
 
 # Start Integration Environment
 echo "Starting Integration Environment..."
 vagrant up integration
-check_service $INTEGRATION_IP $INTEGRATION_PORT
+check_gitlab $INTEGRATION_GITLAB
 
 
 # Start Development Environment
-echo "Starting Development Environment..."
-vagrant up dev-frontend dev-backend
+#echo "Starting Development Environment..."
+#vagrant up dev-frontend dev-backend
 #check_service $FRONTEND_IP $FRONTEND_PORT
 
 # Halt Development Environment to free resources
-echo "Halting Development Environment..."
-vagrant halt dev-frontend dev-backend
+#echo "Halting Development Environment..."
+#vagrant halt dev-frontend dev-backend
 
 # Start Staging Environment
 #echo "Starting Staging Environment..."
@@ -60,4 +75,4 @@ vagrant halt dev-frontend dev-backend
 #vagrant up production
 #check_service $PRODUCTION_IP $PRODUCTION_PORT
 
-echo "All environments are up and running!"
+#echo "All environments are up and running!"

@@ -5,12 +5,14 @@
     cmd: "curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh | sudo bash"
     
 - name: Install GitLab Runner
-  ansible.builtin.command: gitlab-runner
+    apt:
+      name: gitlab-runner
+      state: present
 
 - name: Register Runner
   ansible.builtin.command: gitlab-runner register
 
-  - name: Reset GitLab root password using Rails
+- name: Reset GitLab root password using Rails
   ansible.builtin.shell: |
     sudo gitlab-rails console <<EOF
     user = User.find_by_username('root')
@@ -19,16 +21,19 @@
     user.save!
     EOF
 
-- name: Create GitLab User
+- name: Create GitLab User1
       ansible.builtin.shell: |
         sudo gitlab-rails console <<EOF
-        u = User.new(
-          username: 'user3',
-          email: 'user3@example.com',
-          name: 'User 3',
-          password: 'vagrant1234',
-          password_confirmation: 'vagrant1234'
-        )
+        u = User.new(username: 'user', email: 'user@example.com', name: 'User', password: 'vagrant1234', password_confirmation: 'vagrant1234')
+        u.assign_personal_namespace(Organizations::Organization.default_organization)
+        u.skip_confirmation! # Skip confirmation if desired
+        u.save!
+        EOF
+
+- name: Create GitLab User2
+      ansible.builtin.shell: |
+        sudo gitlab-rails console <<EOF
+        u = User.new(username: 'user2', email: 'user2@example.com', name: 'User2', password: 'vagrant1234', password_confirmation: 'vagrant1234')
         u.assign_personal_namespace(Organizations::Organization.default_organization)
         u.skip_confirmation! # Skip confirmation if desired
         u.save!
@@ -38,8 +43,9 @@
       ansible.builtin.shell: |
         gitlab-runner register --non-interactive \
           --url {{ API_URL_INTEGRATION }} \
-          --registration-token {{ TOKEN }} \
+          --registration-token $GITLAB_PROJECT_TOKEN \
           --description "[integration-server] docker" \
           --tag-list "integration" \
           --executor "docker" \
           --docker-image "ubuntu:22.04"
+        

@@ -108,13 +108,31 @@ project/
 
 # Resource Allocation Table
 
-# Resource Allocation Table
+**Note:** The project is adapted to be able to run on 16GB run and 8 CPUs. (Depending on your computing resources) All VMs should not be all running simultaneously.   
 
 | **VM Name**     | **Purpose**           | **RAM (GB)** | **CPUs** |
 |-----------------|-----------------------|--------------|----------|
-| Backend         | Runs backend services | 2 GB         | 2        |
-| Frontend        | Hosts frontend app    | 2 GB       | 1        |
-| Integration     | GitLab CI/CD server   | 4 GB         | 2        |
-| Staging         | Near-production test  | 2.5 GB       | 2        |
-| Production      | Final deployment      | 2.5 GB         | 1        |
-| **Total Used**  |                       | **13 GB**    | **8**    |
+| Backend         | Runs backend services | 4 GB         | 2        |
+| Frontend        | Hosts frontend app    | 4 GB         | 2        |
+| Integration     | GitLab CI/CD server   | 5 GB         | 4        |
+| Staging         | Near-production test  | 4 GB         | 2        |
+| Production      | Final deployment      | 4 GB         | 2        |
+| **Total Used**  |                       | **21 GB**    | **10**   |
+
+
+
+# Other Notes 
+
+integration server takes around 20min to vagrant up
+
+git config --global user.name "User"
+git config --global user.email "user@example.com"
+
+cd existing_folder
+git init --initial-branch=main
+git remote add origin http://192.168.56.12/gitlab/user/e4l-frontend.git
+git add .
+git commit -m "Initial commit"
+git push --set-upstream origin main
+
+export GITLAB_PROJECT_TOKEN="your_token_here"
