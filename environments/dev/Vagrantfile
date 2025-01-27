@@ -1,0 +1,67 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+
+  '''
+
+  DEV ENVIRONMENT: BACKEND AND FRONTEND
+
+  '''
+  
+  ######### BACKEND VM configuration #########
+  config.vm.define "dev-backend" do |dev_backend|
+    dev_backend.vm.box = "ubuntu/jammy64"
+    dev_backend.vm.hostname = "dev-backend"
+
+    # Private network for backend
+    dev_backend.vm.network "private_network", ip: "192.168.56.10" # Backend IP
+    dev_backend.vm.network "forwarded_port", guest: 3010, host: 3010 # Backend API port
+
+    # Sync folder for backend
+    dev_backend.vm.synced_folder "../../data", "/vagrant_data"
+
+
+    # VirtualBox provider specific configuration
+    dev_backend.vm.provider "virtualbox" do |vb|
+      vb.memory = "4096" 
+      vb.cpus = 2 
+    end
+
+    #config.vm.provision "shell", inline: Vagrantfile<<-SHELL
+    #  sudo apt-get update -y
+   #SHELL
+
+    # Provisioning using Ansible for backend
+    dev_backend.vm.provision "ansible" do |ansible|
+      ansible.playbook = "./playbook/backend_setup.yml"
+    end
+  end
+
+  
+  ######### FRONTEND VM configuration #########
+
+
+  config.vm.define "dev-frontend" do |dev_frontend|
+    dev_frontend.vm.box = "ubuntu/jammy64"
+    dev_frontend.vm.hostname = "dev-frontend"
+
+    # Private network for frontend
+    dev_frontend.vm.network "private_network", ip: "192.168.56.11" # Frontend IP
+    dev_frontend.vm.network "forwarded_port", guest: 8088, host: 8088 # Frontend App port
+
+    # Sync folder for frontend
+    dev_frontend.vm.synced_folder "../../data", "/vagrant_data"
+    
+    # VirtualBox provider specific configuration
+    dev_frontend.vm.provider "virtualbox" do |vb|
+      vb.memory = "4096" 
+      vb.cpus = 2        
+    end
+
+    # Provisioning using Ansible for frontend
+    dev_frontend.vm.provision "ansible" do |ansible|
+      ansible.playbook = "./playbook/frontend_setup.yml"
+    end
+  end
+end

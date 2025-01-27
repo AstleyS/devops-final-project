@@ -1,0 +1,62 @@
+# Basic package list for installation
+BASIC_PACKAGES:
+  - curl
+  - software-properties-common
+  - apt-transport-https
+  - ca-certificates
+  - gnupg-agent
+  - build-essential
+  - python3
+  - make
+  - wget
+  - unzip
+  - dpkg
+  - net-tools
+
+# Java and Gradle versions
+JDK_VERSION: "20"
+GRADLE_VERSION: "8.3"
+
+# Node.js and npm versions
+NODE_VERSION: "15.14.0"
+NPM_VERSION: "7.7.6"
+
+# Database configuration
+DB_URL: "jdbc:mysql://localhost:3306/e4l"
+DB_USERNAME: "root"
+DB_PASSWORD: "12345678"
+
+# Backend configuration
+BACKEND_IP: "192.168.56.10"
+FRONTED_PORT: 3010
+BACKEND_DIR: /home/vagrant/e4l/lu.uni.e4l.platform.api.dev
+
+# Frontend configuration
+FRONTEND_IP: "192.168.56.11"
+FRONTEND_PORT: 8088
+API_URL: "http://{{ FRONTEND_IP }}:{{ FRONTEND_PORT }}/e4lapi/"
+FRONTEND_DIR: /home/vagrant/e4l/lu.uni.e4l.platform.frontend.dev
+
+# Integration environment configuration
+INTEGRATION_IP: "192.168.56.12"
+INTEGRATION_PORT: 8089
+API_URL_INTEGRATION: "http://{{ INTEGRATION_IP }}/gitlab"
+INTEGRATION_DIR: /home/vagrant/integration
+
+# Staging environment configuration
+STAGING_IP: "192.168.56.13"
+STAGING_PORT: 8090
+API_URL_STAGING: "http://{{ STAGING_IP }}:8080/e4lapi/"
+STAGING_DIR: /home/vagrant/staging
+
+# Production environment configuration
+PRODUCTION_IP: "192.168.56.14"
+PRODUCTION_PORT: 8091
+API_URL_PRODUCTION: "http://{{ PRODUCTION_IP }}:8080/e4lapi/"
+PRODUCTION_DIR: /home/vagrant/production
+
+vHome: /home/vagrant
+gitlab_config_external_url: "http://{{ FRONTEND_IP }}/gitlab"
+gitlab_config_port: 8088
+
+TOKEN: "glrt-t3_5amNS6dFsFbjY2Umo6oW"

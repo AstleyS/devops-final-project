@@ -35,20 +35,21 @@ check_service() {
 }
 
 
-# Start Integration Environment
-echo "Starting Integration Environment..."
-vagrant up integration
-check_service $INTEGRATION_IP $INTEGRATION_PORT
+# # Start Integration Environment
+# echo "Starting Integration Environment..."
+# vagrant up integration
+# check_service $INTEGRATION_IP $INTEGRATION_PORT
 
 
 # Start Development Environment
 echo "Starting Development Environment..."
-vagrant up dev-frontend dev-backend
+cd environments/dev
+vagrant up dev-frontend #dev-backend
 #check_service $FRONTEND_IP $FRONTEND_PORT
 
 # Halt Development Environment to free resources
-echo "Halting Development Environment..."
-vagrant halt dev-frontend dev-backend
+# echo "Halting Development Environment..."
+# vagrant halt dev-frontend dev-backend
 
 # Start Staging Environment
 #echo "Starting Staging Environment..."
