@@ -1,0 +1,34 @@
+# Scenario 1
+
+## Goal
+All users can clone the project.
+
+## Pre-conditions
+    - GitLab is up and running.
+    - A non-root user account has been created.
+
+## Main Success Scenario
+
+    - Log in to GitLab using a non-root account.
+    - Create a project and name it E4L.
+    - Follow the instructions provided by GitLab to:
+        - Initialize the remote repository.
+        - Clone it locally.
+    Apply changes to the source code locally, commit it, and push it to the remote repository.
+
+
+# Scenario 2
+
+## Goal
+The pipeline is successfully executed.  
+
+
+## Pre-conditions
+- Up and Run gitlab & gitlab runner
+- Tag for docker runner is specified
+- Created project repository on gitlab
+
+  
+## Main Success Scenario
+1. Clone created repository from gitlab
+2. Add `.gitlab-ci.yml` with following content

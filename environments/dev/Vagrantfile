@@ -66,6 +66,9 @@ Vagrant.configure("2") do |config|
 
     dev_frontend.vm.provision "shell", path: "../../data/scripts/gitlab_dev.sh"
 
+    dev_frontend.vm.provision "shell",
+      inline: "npm i && npm start"
+
 
   end
 end

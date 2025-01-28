@@ -76,7 +76,7 @@ echo -e "Integration took $duration minutes.\n"
 
 # Start Development Environment
 echo "Starting Development Environment..."
-cd ../environments/dev
+cd ../dev
 gnome-terminal --tab --title="Development" -- bash -c "vagrant up dev-frontend && vagrant ssh; exec bash"
 
 #check_service $FRONTEND_IP $FRONTEND_PORT

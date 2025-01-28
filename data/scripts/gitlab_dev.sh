@@ -35,7 +35,7 @@ else
   git pull
 fi
 
-# Create a Sample Change for User 1
+# Changes for User 1
 echo "Making changes to the project for $USERNAME1..."
 cd "$PROJECT_DIR" || exit
 echo "# Dev Environment Setup by $USERNAME1" >> README.md

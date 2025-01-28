@@ -16,7 +16,7 @@ git config --global user.email "$EMAIL2"
 # Clone the GitLab Project for User 2
 if [ ! -d "$PROJECT_DIR" ]; then
   echo "Cloning the GitLab project for $USERNAME2..."
-  git clone "http://$USERNAME2:$TOKEN2@$INTEGRATION_URL/${USERNAME2}/${PROJECT_NAME}.git" "$PROJECT_DIR"
+  git clone "http://$USERNAME2:$TOKEN2@$INTEGRATION_URL/${USERNAME1}/${PROJECT_NAME}.git" "$PROJECT_DIR"
 else
   echo "Project directory for $USERNAME2 already exists. Pulling latest changes..."
   cd "$PROJECT_DIR" || exit

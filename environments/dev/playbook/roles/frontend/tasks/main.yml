@@ -58,22 +58,22 @@
     create: yes
 
 
-- name: Run npm install and start
-  shell: "npm install & npm start"
-  args:
-    chdir: "{{ FRONTEND_DIR }}"
-
-- name: Wait for frontend to start
-  pause:
-    seconds: 240
-
-- name: Verify frontend is running
-  uri:
-    url: "{{ API_URL }}"
-    status_code: 200
-  register: frontend_status
-
-- name: Display frontend status
-  debug:
-    var: frontend_status
+#- name: Run npm install and start
+#  shell: "npm install & npm start"
+#  args:
+#    chdir: "{{ FRONTEND_DIR }}"
+#
+#- name: Wait for frontend to start
+#  pause:
+#    seconds: 240
+#
+#- name: Verify frontend is running
+#  uri:
+#    url: "{{ API_URL }}"
+#    status_code: 200
+#  register: frontend_status
+#
+#- name: Display frontend status
+#  debug:
+#    var: frontend_status
 
