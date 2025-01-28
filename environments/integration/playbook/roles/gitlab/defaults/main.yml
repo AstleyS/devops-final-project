@@ -2,7 +2,7 @@
 
 # use 'apt' or 'official' to get packages from standart
 # repositories or from the tools' official websites
-
+vHome: /home/vagrant
 destination: "{{vHome}}/Tools_download"
 
 

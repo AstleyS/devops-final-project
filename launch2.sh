@@ -29,7 +29,7 @@ check_service() {
   echo "Checking if $url is up..."
   until curl -s -o /dev/null -w "%{http_code}" "$url" | grep -q "200"; do
     echo "Waiting for $url to be ready..."
-    sleep 10
+    sleep 30
   done
   echo "$url is up!"
 }
@@ -38,10 +38,20 @@ check_service() {
 # Check if the Integration server is up
 
 # Start Integration Environment
-echo "Starting Integration Environment..."
+start_time=$(date +%s)
+
+echo "Starting Integration Environment ($INTEGRATION_URL)..."
 cd environments/integration 
 gnome-terminal --tab --title="Integration Server" -- bash -c "vagrant up && vagrant ssh; exec bash"
 check_service "$INTEGRATION_URL"
+
+
+end_time=$(date +%s)
+duration_seconds=$((end_time - start_time))
+duration=$(echo "scale=2; $duration_seconds / 60" | bc)
+
+# Display time taken
+echo -e "Integration took $duration minutes.\n"
 
 
 # Start Development Environment
