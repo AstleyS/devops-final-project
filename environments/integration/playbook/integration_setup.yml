@@ -12,11 +12,6 @@
     - ../config_global_vars.yml
       
   tasks:
-    - include_role:
-        name: ../roles/backend 
-
-    - include_role:
-        name: ../roles/frontend
 
     - include_role:
         name: ../roles/gitlab

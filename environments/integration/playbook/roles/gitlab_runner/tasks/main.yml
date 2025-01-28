@@ -10,7 +10,7 @@
 - name: Register Runner
   ansible.builtin.command: gitlab-runner register
 
-  - name: Reset GitLab root password using Rails
+- name: Reset GitLab root password using Rails
   ansible.builtin.shell: |
     sudo gitlab-rails console <<EOF
     user = User.find_by_username('root')
@@ -34,12 +34,12 @@
         u.save!
         EOF
 
-- name: Register GitLab Runner
-      ansible.builtin.shell: |
-        gitlab-runner register --non-interactive \
-          --url {{ API_URL_INTEGRATION }} \
-          --registration-token {{ TOKEN }} \
-          --description "[integration-server] docker" \
-          --tag-list "integration" \
-          --executor "docker" \
-          --docker-image "ubuntu:22.04"
+#- name: Register GitLab Runner
+#      ansible.builtin.shell: |
+#        gitlab-runner register --non-interactive \
+#          --url {{ API_URL_INTEGRATION }} \
+#          --registration-token {{ TOKEN }} \
+#          --description "[integration-server] docker" \
+#          --tag-list "integration" \
+#          --executor "docker" \
+#          --docker-image "ubuntu:22.04"

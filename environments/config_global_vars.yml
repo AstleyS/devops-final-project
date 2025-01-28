@@ -29,13 +29,13 @@ DB_PASSWORD: "12345678"
 # Backend configuration
 BACKEND_IP: "192.168.56.10"
 FRONTED_PORT: 3010
-BACKEND_DIR: /home/vagrant/e4l/lu.uni.e4l.platform.api.dev
+BACKEND_DIR: /vagrant_data/e4l/lu.uni.e4l.platform.api.dev
 
 # Frontend configuration
 FRONTEND_IP: "192.168.56.11"
 FRONTEND_PORT: 8088
 API_URL: "http://{{ FRONTEND_IP }}:{{ FRONTEND_PORT }}/e4lapi/"
-FRONTEND_DIR: /home/vagrant/e4l/lu.uni.e4l.platform.frontend.dev
+FRONTEND_DIR: /vagrant_data/e4l/lu.uni.e4l.platform.frontend.dev
 
 # Integration environment configuration
 INTEGRATION_IP: "192.168.56.12"

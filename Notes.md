@@ -108,8 +108,6 @@ project/
 
 # Resource Allocation Table
 
-# Resource Allocation Table
-
 | **VM Name**     | **Purpose**           | **RAM (GB)** | **CPUs** |
 |-----------------|-----------------------|--------------|----------|
 | Backend         | Runs backend services | 2 GB         | 2        |

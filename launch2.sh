@@ -3,48 +3,51 @@
 # Define environment variables
 BACKEND_IP="192.168.56.10"
 BACKEND_PORT=3010
-BACKEND_DIR="/home/vagrant/e4l/lu.uni.e4l.platform.api.dev"
+BACKEND_DIR="/vagrant_data/e4l/lu.uni.e4l.platform.api.dev"
 
 FRONTEND_IP="192.168.56.11"
 FRONTEND_PORT=8088
-FRONTEND_DIR="/home/vagrant/e4l/lu.uni.e4l.platform.frontend.dev"
+FRONTEND_DIR="/vagrant_data/e4l/lu.uni.e4l.platform.frontend.dev"
 
 INTEGRATION_IP="192.168.56.12"
-INTEGRATION_PORT=8089
+INTEGRATION_PORT=8088
 INTEGRATION_DIR="/home/vagrant/integration"
+INTEGRATION_URL="http://$INTEGRATION_IP/gitlab"
 
 STAGING_IP="192.168.56.13"
-STAGING_PORT=8090
+STAGING_PORT=8088
 STAGING_DIR="/home/vagrant/staging"
 
 PRODUCTION_IP="192.168.56.14"
-PRODUCTION_PORT=8091
+PRODUCTION_PORT=8088
 PRODUCTION_DIR="/home/vagrant/production"
 
 # Check if a service is running
+# Function to check if a URL returns 200
 check_service() {
-  local ip=$1
-  local port=$2
-  echo "Checking service at ${ip}:${port}..."
-  
-  while ! netstat -an | grep -q "${ip}:${port}"; do
-    echo "Service at ${ip}:${port} not available. Retrying in 5 seconds..."
-    sleep 5
+  local url=$1
+  echo "Checking if $url is up..."
+  until curl -s -o /dev/null -w "%{http_code}" "$url" | grep -q "200"; do
+    echo "Waiting for $url to be ready..."
+    sleep 10
   done
-  echo "Service at ${ip}:${port} is up!"
+  echo "$url is up!"
 }
 
 
-# # Start Integration Environment
-# echo "Starting Integration Environment..."
-# vagrant up integration
-# check_service $INTEGRATION_IP $INTEGRATION_PORT
+# Check if the Integration server is up
+
+# Start Integration Environment
+echo "Starting Integration Environment..."
+cd environments/integration 
+gnome-terminal --tab --title="Integration Server" -- bash -c "vagrant up && vagrant ssh; exec bash"
+check_service "$INTEGRATION_URL"
 
 
 # Start Development Environment
-echo "Starting Development Environment..."
-cd environments/dev
-vagrant up dev-frontend #dev-backend
+#echo "Starting Development Environment..."
+#cd ../environments/dev
+#vagrant up dev-frontend #dev-backend
 #check_service $FRONTEND_IP $FRONTEND_PORT
 
 # Halt Development Environment to free resources
