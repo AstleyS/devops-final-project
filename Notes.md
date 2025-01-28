@@ -91,18 +91,9 @@ project/
 ├── Vagrantfile
 ├── data/
 │   ├── e4l/
-│   ├── integration/
-│   ├── staging/
-│   └── production/
-├── scripts/
-│   ├── ansible/
-│   │   ├── backend_setup.yml
-│   │   ├── frontend_setup.yml
-│   │   ├── integration_setup.yml
-│   │   ├── staging_setup.yml
-│   │   └── production_setup.yml
-│   └── utilities/
-└── README.md
+│   ├── shared/
+├── environments/
+└── ...
 
 ```
 

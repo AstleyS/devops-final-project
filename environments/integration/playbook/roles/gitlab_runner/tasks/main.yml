@@ -1,11 +1,92 @@
 ---
 
-- name: Download Gitlab Runner
-  ansible.builtin.command:
-    cmd: "curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh | sudo bash"
-    
-- name: Install GitLab Runner
+- name: Install GitLab Runner1
+  ansible.builtin.shell: |
+    curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh | sudo bash
+  args:
+    warn: false
+
+- name: Install GitLab Runner2
   ansible.builtin.command: gitlab-runner
 
 - name: Register Runner
   ansible.builtin.command: gitlab-runner register
+
+- name: Reset GitLab root password using Rails
+  ansible.builtin.shell: |
+    sudo gitlab-rails console <<EOF
+    user = User.find_by_username('root')
+    user.password = 'vagrant1234'
+    user.password_confirmation = 'vagrant1234'
+    user.save!
+    EOF
+
+- name: Create GitLab User1
+  ansible.builtin.shell: |
+    sudo gitlab-rails console <<EOF
+    u = User.new(
+      username: 'user1',
+      email: 'user1@example.com',
+      name: 'User 1',
+      password: 'vagrant1234',
+      password_confirmation: 'vagrant1234'
+    )
+    u.assign_personal_namespace(Organizations::Organization.default_organization)
+    u.skip_confirmation! # Skip confirmation if desired
+    u.save!
+    EOF
+
+- name: Create GitLab User2
+  ansible.builtin.shell: |
+    sudo gitlab-rails console <<EOF
+    u = User.new(
+      username: 'user2',
+      email: 'user2@example.com',
+      name: 'User 2',
+      password: 'vagrant1234',
+      password_confirmation: 'vagrant1234'
+    )
+    u.assign_personal_namespace(Organizations::Organization.default_organization)
+    u.skip_confirmation! # Skip confirmation if desired
+    u.save!
+    EOF
+
+
+- name: Retrieve personal access token for the users
+  ansible.builtin.shell: |
+    sudo gitlab-rails runner "puts User.find_by(username: 'user1').personal_access_tokens.create(scopes: [:api], name: 'token').token"
+    sudo gitlab-rails runner "puts User.find_by(username: 'user1').personal_access_tokens.create(scopes: [:api], name: 'token').token"
+  register: personal_token
+
+- name: Store the personal access token in a file
+  ansible.builtin.copy:
+    content: "{{ personal_token.stdout }}"
+    dest: "/vagrant_data/shared/personal_access_token.txt"
+    mode: "0644"
+
+- name: Create a GitLab project with the created user1
+  uri:
+    url: "{{ API_URL_INTEGRATION }}/api/v4/projects"
+    method: POST
+    headers:
+      Private-Token: "{{ personal_token.results[0].stdout }}"
+    body:
+      name: "E4L"
+      visibility: "public"
+    status_code: 201
+  register: project_creation_result
+
+- name: Retrieve the GitLab Runner registration token
+  uri:
+    url: "{{ API_URL_INTEGRATION }}/api/v4/runners/registration_token"
+    method: GET
+    headers:
+      Private-Token: "{{ personal_token.results[0].stdout }}"
+    return_content: yes
+  register: runner_token
+
+- name: Store the GitLab Runner registration token in a file
+  copy:
+    content: "{{ runner_token.json.token }}"
+    dest: "/vagrant_data/shared/runner_access_token.txt"
+    mode: "0644"

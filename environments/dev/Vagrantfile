@@ -48,7 +48,7 @@ Vagrant.configure("2") do |config|
 
     # Private network for frontend
     dev_frontend.vm.network "private_network", ip: "192.168.56.11" # Frontend IP
-    dev_frontend.vm.network "forwarded_port", guest: 8088, host: 8089 # Frontend App port
+    dev_frontend.vm.network "forwarded_port", guest: 8088, host: 8090 # Frontend App port
 
     # Sync folder for frontend
     dev_frontend.vm.synced_folder "../../data", "/vagrant_data"

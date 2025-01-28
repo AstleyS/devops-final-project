@@ -1,16 +1,42 @@
 #!/bin/bash
 
-# Start timer
-start_time=$(date +%s)
+# Define environment variables
+BACKEND_IP="192.168.56.10"
+BACKEND_PORT=3010
+BACKEND_DIR="/vagrant_data/e4l/lu.uni.e4l.platform.api.dev"
 
-# Closing all running Vagrant virtual machines
-echo -e "\nClosing all running Vagrant virtual machines\n"
-sleep 5
-vagrant global-status --prune | awk '/virtualbox.*running/ {print $1}' | xargs -L1 vagrant halt
+FRONTEND_IP="192.168.56.11"
+FRONTEND_PORT=8088
+FRONTEND_DIR="/vagrant_data/e4l/lu.uni.e4l.platform.frontend.dev"
+
+INTEGRATION_IP="192.168.56.12"
+INTEGRATION_PORT=8088
+INTEGRATION_DIR="/home/vagrant/integration"
+INTEGRATION_URL="http://$INTEGRATION_IP/gitlab"
+
+STAGING_IP="192.168.56.13"
+STAGING_PORT=8088
+STAGING_DIR="/home/vagrant/staging"
+
+PRODUCTION_IP="192.168.56.14"
+PRODUCTION_PORT=8088
+PRODUCTION_DIR="/home/vagrant/production"
+
+# Check if a service is running
+# Function to check if a URL returns 200
+check_service() {
+  local url=$1
+  echo "Checking if $url is up..."
+  until curl -s -o /dev/null -w "%{http_code}" "$url" | grep -q "200"; do
+    echo "Waiting for $url to be ready..."
+    sleep 120
+  done
+  echo "$url is up!"
+}
 
 # Restarting Ports
-start_port=8080
-end_port=8088
+start_port=8088
+end_port=8095
 
 echo -e "\nRestarting ports:\n"
 
@@ -26,60 +52,45 @@ done
 
 echo -e "\nPorts restarted.\n"
 
-# Checking for dependencies
-echo -e "\nChecking for dependencies\n"
-current_version=$(ansible --version | awk -F '[[:space:]]+' '/ansible/ {print $2; exit}')
-if [ -z "$current_version" ]; then
-  echo "Ansible is not installed. Installing Ansible..."
-  sudo apt-get update
-  sudo apt-get install -y ansible
-else
-  echo "Ansible version $current_version is installed."
-fi
 
 
-# Initialising CI server
-echo -e "\n============Initialising CI server============\n"
-cd integration-env
+# Check if the Integration server is up
 
-# Check if the VM is already created
-if vagrant status | grep -q "not created"; then
-    echo "The VM does not exist. Creating and provisioning the VM..."
-    vagrant up
-else
-    echo "The VM exists. Halting, starting, and provisioning the VM..."
-    vagrant halt -f
-    vagrant up
-    vagrant provision
-    
-sleep 10
-fi
+# Start Integration Environment
+start_time=$(date +%s)
 
-# Wait for the VM to be up and gitlab url to be connected
-echo "Waiting for the VM to be up and gitlab url to be connected"
-sleep 60
+echo "Starting Integration Environment ($INTEGRATION_URL)..."
+cd environments/integration 
+gnome-terminal --tab --title="Integration Server" -- bash -c "vagrant up && vagrant ssh; exec bash"
+check_service "$INTEGRATION_URL"
 
 
-# Initializing Developer Environment
-#echo "Initializing Developer Environment"
-#cd dev-env
-#vagrant halt-f && vagrant up
-
-# Wait for the script to finish
-#wait
-
-echo -e "\n============CI server initialised============\n"
-
-# End timer
 end_time=$(date +%s)
 duration_seconds=$((end_time - start_time))
 duration=$(echo "scale=2; $duration_seconds / 60" | bc)
 
 # Display time taken
-echo -e "Environment setup took $duration minutes.\n"
-sleep 5
+echo -e "Integration took $duration minutes.\n"
 
-vagrant ssh
 
-# Exit script
-exit 0
+# Start Development Environment
+#echo "Starting Development Environment..."
+#cd ../environments/dev
+#vagrant up dev-frontend #dev-backend
+#check_service $FRONTEND_IP $FRONTEND_PORT
+
+# Halt Development Environment to free resources
+# echo "Halting Development Environment..."
+# vagrant halt dev-frontend dev-backend
+
+# Start Staging Environment
+#echo "Starting Staging Environment..."
+#vagrant up staging
+#check_service $STAGING_IP $STAGING_PORT
+
+# Start Production Environment
+#echo "Starting Production Environment..."
+#vagrant up production
+#check_service $PRODUCTION_IP $PRODUCTION_PORT
+
+echo "All environments are up and running!"

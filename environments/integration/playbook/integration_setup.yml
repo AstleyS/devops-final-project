@@ -19,8 +19,8 @@
     - include_role:
         name: ../roles/gitlab_config
 
-    - include_role:
-        name: ../roles/gitlab_runner
+    #- include_role:
+    #    name: ../roles/gitlab_runner
 
     - include_role:
         name: ../roles/docker
