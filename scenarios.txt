@@ -1,6 +1,24 @@
 # Scenario 1
 
 ## Goal
+User can upload the project.
+
+## Pre-conditions
+    - GitLab is up and running.
+    - A non-root user account has been created.
+
+## Main Success Scenario
+    - Log in to GitLab using a non-root account.
+    - Create a project and name it E4L.
+    - Follow the instructions provided by GitLab to:
+        - Initialize the remote repository.
+        - Clone it locally.
+    Apply changes to the source code locally, commit it, and push it to the remote repository.
+
+
+# Scenario 1
+
+## Goal
 All users can clone the project.
 
 ## Pre-conditions
