@@ -1,12 +1,12 @@
 # Configuration Variables
 INTEGRATION_URL="http://192.168.56.12/gitlab"
-PROJECT_NAME="E4L"
+PROJECT_NAME="e4l"
 USERNAME1="user1"
 USERNAME2="user2"
 EMAIL1="user1@example.com"
 EMAIL2="user2@example.com"
 TOKEN_FILE="/vagrant_data/shared/personal_access_token.txt"
-PROJECT_DIR="/vagrant_data/projects/${PROJECT_NAME}"
+PROJECT_DIR="/vagrant_data/${PROJECT_NAME}"
 
 # Configure Git for User 2
 echo "Configuring Git for $USERNAME2..."
@@ -16,7 +16,7 @@ git config --global user.email "$EMAIL2"
 # Clone the GitLab Project for User 2
 if [ ! -d "$PROJECT_DIR" ]; then
   echo "Cloning the GitLab project for $USERNAME2..."
-  git clone "http://$USERNAME2:$TOKEN2@$INTEGRATION_URL/${USERNAME1}/${PROJECT_NAME}.git" "$PROJECT_DIR"
+  git clone "git@192.168.56.12:${USERNAME1}/${PROJECT_NAME}.git" "$PROJECT_DIR"
 else
   echo "Project directory for $USERNAME2 already exists. Pulling latest changes..."
   cd "$PROJECT_DIR" || exit

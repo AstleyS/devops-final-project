@@ -40,8 +40,6 @@ Vagrant.configure("2") do |config|
 
   
   ######### FRONTEND VM configuration #########
-
-
   config.vm.define "dev-frontend" do |dev_frontend|
     dev_frontend.vm.box = "ubuntu/jammy64"
     dev_frontend.vm.hostname = "dev-frontend"
@@ -66,8 +64,8 @@ Vagrant.configure("2") do |config|
 
     dev_frontend.vm.provision "shell", path: "../../data/scripts/gitlab_dev.sh"
 
-    dev_frontend.vm.provision "shell",
-      inline: "npm i && npm start"
+    #dev_frontend.vm.provision "shell",
+    #  inline: "npm i && npm start"
 
 
   end

@@ -9,8 +9,7 @@
 
 - name: Unzip frontend source code
   shell: |
-    rm -rf {{ FRONTEND_DIR }}/*
-    unzip -o {{ FRONTEND_DIR }}.zip -d {{ FRONTEND_DIR }}
+    unzip -o {{ E4L_ORIGINAL_DIR }}/lu.uni.e4l.platform.frontend.dev.zip -d {{ PROJECT_DIR }}
   args:
     executable: /bin/bash
 

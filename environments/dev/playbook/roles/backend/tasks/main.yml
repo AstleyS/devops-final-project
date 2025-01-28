@@ -10,10 +10,9 @@
     name: "{{ BASIC_PACKAGES }}"
     state: present
 
-- name: Unzip backend source code
+ name: Unzip backend source code
   shell: |
-    rm -rf {{ BACKEND_DIR }}/*
-    unzip -o {{ BACKEND_DIR }}.zip -d {{ BACKEND_DIR }}
+    unzip -o {{ E4L_ORIGINAL_DIR }}/lu.uni.e4l.platform.api.dev.zip -d {{ PROJECT_DIR }}
   args:
     executable: /bin/bash
 

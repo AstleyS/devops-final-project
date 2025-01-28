@@ -5,10 +5,6 @@ echo "Installing GitLab Runner..."
 curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh | sudo bash
 sudo apt-get install gitlab-runner -y
 
-# Register GitLab Runner (initial registration)
-echo "Registering GitLab Runner..."
-gitlab-runner register
-
 # Reset GitLab root password using Rails
 echo "Resetting GitLab root password..."
 sudo gitlab-rails console <<EOF
@@ -50,7 +46,17 @@ EOF
 
 # Retrieve personal access token for user1
 echo "Retrieving personal access token for user1..."
-PERSONAL_TOKEN=$(sudo gitlab-rails runner "puts User.find_by(username: 'user1').personal_access_tokens.create(scopes: [:api], name: 'token').token")
+PERSONAL_TOKEN=$(sudo gitlab-rails runner "
+token = User.find_by_username('user1').personal_access_tokens.create(
+  scopes: ['api'],
+  name: 'token',
+  expires_at: 365.days.from_now
+); 
+token.set_token('token'); 
+token.save!;
+puts token.token;
+")
+
 echo $PERSONAL_TOKEN > /vagrant_data/shared/personal_access_token.txt
 chmod 0644 /vagrant_data/shared/personal_access_token.txt
 
@@ -62,7 +68,7 @@ curl --header "Private-Token: $PERSONAL_TOKEN" --data 'name=E4L&visibility=publi
 # Retrieve the GitLab Runner registration token
 echo "Retrieving GitLab Runner registration token..."
 URL="http://192.168.56.12/gitlab/api/v4/runners/registration_token"
-RUNNER_TOKEN=$(curl --header "Private-Token: $PERSONAL_TOKEN" ${URL} | jq -r '.token')
+RUNNER_TOKEN=$(curl --header "Private-Token: $PERSONAL_TOKEN" ${URL} | grep -oP '"token"\s*:\s*"\K[^"]+')
 echo $RUNNER_TOKEN > /vagrant_data/shared/runner_access_token.txt
 chmod 0644 /vagrant_data/shared/runner_access_token.txt
 
@@ -71,9 +77,10 @@ echo "Registering GitLab Runner with the token..."
 gitlab-runner register --non-interactive \
   --url "http://192.168.56.12/gitlab" \
   --registration-token "$RUNNER_TOKEN" \
-  --executor "shell" \
-  --description "gitlab-runner-1" \
-  --tag-list "dev" \
+  --description "docker" \
+  --tag-list "integration" \
+  --executor "docker" \
+  --docker-image "alpine:latest" \
   --run-untagged="true" \
 
 echo "GitLab Runner registration completed successfully."

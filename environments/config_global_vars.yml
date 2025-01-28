@@ -26,10 +26,13 @@ DB_URL: "jdbc:mysql://localhost:3306/e4l"
 DB_USERNAME: "root"
 DB_PASSWORD: "12345678"
 
+E4L_ORIGINAL_DIR: /vagrant_data/e4l_original
+PROJECT_DIR: /vagrant_data/e4l
+
 # Backend configuration
 BACKEND_IP: "192.168.56.10"
 FRONTED_PORT: 3010
-BACKEND_DIR: /vagrant_data/e4l/lu.uni.e4l.platform.api.dev
+BACKEND_DIR: {{ PROJECT_DIR }}/lu.uni.e4l.platform.api.dev
 
 # Frontend configuration
 FRONTEND_IP: "192.168.56.11"

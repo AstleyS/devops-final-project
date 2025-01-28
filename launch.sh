@@ -64,7 +64,7 @@ cd environments/integration
 gnome-terminal --tab --title="Integration Server" -- bash -c "vagrant up && vagrant ssh; exec bash"
 #check_service "$INTEGRATION_URL"
 
-sleep 300
+sleep 1500 # wait 20min
 
 end_time=$(date +%s)
 duration_seconds=$((end_time - start_time))
@@ -80,10 +80,6 @@ cd ../dev
 gnome-terminal --tab --title="Development" -- bash -c "vagrant up dev-frontend && vagrant ssh; exec bash"
 
 #check_service $FRONTEND_IP $FRONTEND_PORT
-
-# Halt Development Environment to free resources
-# echo "Halting Development Environment..."
-# vagrant halt dev-frontend dev-backend
 
 # Start Staging Environment
 #echo "Starting Staging Environment..."

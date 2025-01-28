@@ -16,7 +16,7 @@ User can upload the project.
     Apply changes to the source code locally, commit it, and push it to the remote repository.
 
 
-# Scenario 1
+# Scenario 2
 
 ## Goal
 All users can clone the project.
@@ -35,7 +35,7 @@ All users can clone the project.
     Apply changes to the source code locally, commit it, and push it to the remote repository.
 
 
-# Scenario 2
+# Scenario 3
 
 ## Goal
 The pipeline is successfully executed.  
