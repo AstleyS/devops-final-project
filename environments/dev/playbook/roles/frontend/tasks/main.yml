@@ -10,7 +10,7 @@
 - name: Unzip frontend source code
   shell: |
     rm -rf {{ FRONTEND_DIR }}/*
-    unzip -o {{ FRONTEND_DIR }}.zip -d /home/vagrant/e4l/
+    unzip -o {{ FRONTEND_DIR }}.zip -d {{ FRONTEND_DIR }}
   args:
     executable: /bin/bash
 
@@ -58,24 +58,22 @@
     create: yes
 
 
-#- name: Run npm install and start frontend
-#  shell: "npm i && npm start &"
-#  args:
-#    chdir: "{{ FRONTEND_DIR }}"
-#  async: 1  # Run the command asynchronously
-#  poll: 0   # Don't wait for the command to complete
-#
-#- name: Wait for frontend to start
-#  pause:
-#    seconds: 240
-#
-#- name: Verify frontend is running
-#  uri:
-#    url: "{{ API_URL }}"
-#    status_code: 200
-#  register: frontend_status
-#
-#- name: Display frontend status
-#  debug:
-#    var: frontend_status
+- name: Run npm install and start
+  shell: "npm install & npm start"
+  args:
+    chdir: "{{ FRONTEND_DIR }}"
+
+- name: Wait for frontend to start
+  pause:
+    seconds: 240
+
+- name: Verify frontend is running
+  uri:
+    url: "{{ API_URL }}"
+    status_code: 200
+  register: frontend_status
+
+- name: Display frontend status
+  debug:
+    var: frontend_status
 

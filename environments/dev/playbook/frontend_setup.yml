@@ -15,5 +15,5 @@
     - include_role:
         name: frontend
 
-    - include_role:
-      name: gitlab
+    #- include_role:
+    #    name: gitlab

@@ -13,7 +13,7 @@
 - name: Unzip backend source code
   shell: |
     rm -rf {{ BACKEND_DIR }}/*
-    unzip -o {{ BACKEND_DIR }}.zip -d /home/vagrant/e4l/
+    unzip -o {{ BACKEND_DIR }}.zip -d {{ BACKEND_DIR }}
   args:
     executable: /bin/bash
 

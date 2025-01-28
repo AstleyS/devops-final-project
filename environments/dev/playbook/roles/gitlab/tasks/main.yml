@@ -61,8 +61,6 @@
   when: not gitlab_file.stat.exists
 
 
----
-
 - name: Set external_url in gitlab.rb
   ansible.builtin.lineinfile:
     path: /etc/gitlab/gitlab.rb
