@@ -10,45 +10,45 @@ data/e4l/lu.uni.e4l.platform.frontend.dev/
 
 # Backend gitignore
 # Gradle directories
-data/lu.uni.e4l.platform.api.dev/.gradle/
-data/lu.uni.e4l.platform.api.dev/gradle/
+data/e4l/lu.uni.e4l.platform.api.dev/.gradle/
+data/e4l/lu.uni.e4l.platform.api.dev/gradle/
 
 # Build directories
-data/lu.uni.e4l.platform.api.dev/bin/
-data/lu.uni.e4l.platform.api.dev/build/
+data/e4l/lu.uni.e4l.platform.api.dev/bin/
+data/e4l/lu.uni.e4l.platform.api.dev/build/
 
 # Gradle configuration files
-data/lu.uni.e4l.platform.api.dev/gradle.properties
-data/lu.uni.e4l.platform.api.dev/*.gradle
+data/e4l/lu.uni.e4l.platform.api.dev/gradle.properties
+data/e4l/lu.uni.e4l.platform.api.dev/*.gradle
 
 # JSON files
-data/lu.uni.e4l.platform.api.dev/*.json
+data/e4l/lu.uni.e4l.platform.api.dev/*.json
 
 # Logs
-data/lu.uni.e4l.platform.api.dev/logs/
-data/lu.uni.e4l.platform.api.dev/*.log
+data/e4l/lu.uni.e4l.platform.api.dev/logs/
+data/e4l/lu.uni.e4l.platform.api.dev/*.log
 
 # OS generated files
-data/lu.uni.e4l.platform.api.dev/.DS_Store
-data/lu.uni.e4l.platform.api.dev/Thumbs.db
+data/e4l/lu.uni.e4l.platform.api.dev/.DS_Store
+data/e4l/lu.uni.e4l.platform.api.dev/Thumbs.db
 
 
 # FRONTEND gitignore
 # Logs
-data/lu.uni.e4l.platform.frontend.devlogs
-data/lu.uni.e4l.platform.frontend.dev*.log
-data/lu.uni.e4l.platform.frontend.devnpm-debug.log*
-data/lu.uni.e4l.platform.frontend.devyarn-debug.log*
-data/lu.uni.e4l.platform.frontend.devyarn-error.log*
+data/e4l/lu.uni.e4l.platform.frontend.devlogs
+data/e4l/lu.uni.e4l.platform.frontend.dev*.log
+data/e4l/lu.uni.e4l.platform.frontend.devnpm-debug.log*
+data/e4l/lu.uni.e4l.platform.frontend.devyarn-debug.log*
+data/e4l/lu.uni.e4l.platform.frontend.devyarn-error.log*
 
 # Dependency directories
-data/lu.uni.e4l.platform.frontend.dev/node_modules/
+data/e4l/lu.uni.e4l.platform.frontend.dev/node_modules/
 
 # Build output
-data/lu.uni.e4l.platform.frontend.dev/e4l.frontend/web/dist/
+data/e4l/lu.uni.e4l.platform.frontend.dev/e4l.frontend/web/dist/
 
 # Development environment files
-data/lu.uni.e4l.platform.frontend.dev/.env
+data/e4l/lu.uni.e4l.platform.frontend.dev/.env
 
 # Configuration files
 .babelrc

@@ -1,7 +1,7 @@
 stages:
   - install
   - test
-  - build
+  - run
 
 variables:
   NODE_VERSION: "14.17.0"
@@ -31,10 +31,10 @@ run_tests:
   script:
     - npm test
 
-build_project:
-  stage: build
+run_project:
+  stage: run
   script:
-    - npm run build
+    - npm start
   artifacts:
     paths:
       - dist/
