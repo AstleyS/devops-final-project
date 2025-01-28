@@ -1,61 +1,40 @@
 stages:
-  - setup
+  - install
+  - test
   - build
 
 variables:
-  BACKEND_DIR: "/home/vagrant/e4l/lu.uni.e4l.platform.api.dev"
-  FRONTEND_DIR: "/home/vagrant/e4l/lu.uni.e4l.platform.frontend.dev"
-  DB_URL: "jdbc:mysql://localhost:3306/e4l"
-  DB_USERNAME: "root"
-  DB_PASSWORD: "12345678"
-  GRADLE_VERSION: "8.3"
-  NODE_VERSION: "15.14.0"
-  NPM_VERSION: "7.7.6"
+  NODE_VERSION: "14.17.0"
+  NPM_VERSION: "6.14.13"
 
-setup_environment:
-  stage: setup
-  image: ubuntu:20.04
-  before_script:
-    - apt-get update
-    - apt-get install -y ansible wget unzip curl
+before_script:
+  - apt-get update -y
+  - apt-get install -y curl
+  - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+  - export NVM_DIR="$HOME/.nvm"
+  - [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+  - nvm install $NODE_VERSION
+  - nvm use $NODE_VERSION
+  - nvm alias default $NODE_VERSION
+  - npm install -g npm@$NPM_VERSION
+
+install_dependencies:
+  stage: install
   script:
-    # Backend Setup
-    - apt-get install -y openjdk-20-jdk mysql-server
-    - wget -q https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip -O /tmp/gradle.zip
-    - unzip -o /tmp/gradle.zip -d /opt/gradle/
-    - export PATH=$PATH:/opt/gradle/gradle-${GRADLE_VERSION}/bin
-    - rm -rf ${BACKEND_DIR}/*
-    - unzip -o ${BACKEND_DIR}.zip -d /home/vagrant/e4l/
-
-    # MySQL Setup
-    - service mysql start
-    - mysql -u ${DB_USERNAME} -p${DB_PASSWORD} -e "CREATE DATABASE IF NOT EXISTS e4l;"
-    - sed -i "s|^spring.datasource.url=.*|spring.datasource.url=${DB_URL}|" ${BACKEND_DIR}/src/main/resources/application.properties
-    - sed -i "s|^spring.datasource.username=.*|spring.datasource.username=${DB_USERNAME}|" ${BACKEND_DIR}/src/main/resources/application.properties
-    - sed -i "s|^spring.datasource.password=.*|spring.datasource.password=${DB_PASSWORD}|" ${BACKEND_DIR}/src/main/resources/application.properties
-
-    # Frontend Setup
-    - apt-get install -y curl gnupg lsb-release
-    - curl -fsSL https://deb.nodesource.com/setup_15.x | bash -
-    - apt-get install -y nodejs
-    - npm install -g npm@${NPM_VERSION}
-    - rm -rf ${FRONTEND_DIR}/*
-    - unzip -o ${FRONTEND_DIR}.zip -d /home/vagrant/e4l/
-    - echo "API_URL=${API_URL}" > ${FRONTEND_DIR}/.env
-
-build_backend:
-  stage: build
-  image: openjdk:20
-  script:
-    - cd ${BACKEND_DIR}
-    - ./gradlew build
-    - echo "Backend build complete."
-
-build_frontend:
-  stage: build
-  image: node:15
-  script:
-    - cd ${FRONTEND_DIR}
     - npm install
+  artifacts:
+    paths:
+      - node_modules/
+
+run_tests:
+  stage: test
+  script:
+    - npm test
+
+build_project:
+  stage: build
+  script:
     - npm run build
-    - echo "Frontend build complete."
+  artifacts:
+    paths:
+      - dist/

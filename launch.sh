@@ -62,8 +62,9 @@ start_time=$(date +%s)
 echo "Starting Integration Environment ($INTEGRATION_URL)..."
 cd environments/integration 
 gnome-terminal --tab --title="Integration Server" -- bash -c "vagrant up && vagrant ssh; exec bash"
-check_service "$INTEGRATION_URL"
+#check_service "$INTEGRATION_URL"
 
+sleep 300
 
 end_time=$(date +%s)
 duration_seconds=$((end_time - start_time))
@@ -74,9 +75,10 @@ echo -e "Integration took $duration minutes.\n"
 
 
 # Start Development Environment
-#echo "Starting Development Environment..."
-#cd ../environments/dev
-#vagrant up dev-frontend #dev-backend
+echo "Starting Development Environment..."
+cd ../environments/dev
+gnome-terminal --tab --title="Development" -- bash -c "vagrant up dev-frontend && vagrant ssh; exec bash"
+
 #check_service $FRONTEND_IP $FRONTEND_PORT
 
 # Halt Development Environment to free resources

@@ -56,10 +56,12 @@ chmod 0644 /vagrant_data/shared/personal_access_token.txt
 
 # Create a GitLab project with the created user1
 echo "Creating GitLab project..."
-curl --header "Private-Token: $PERSONAL_TOKEN" --data 'name=E4L&visibility=public' "${API_URL_INTEGRATION}/api/v4/projects"
+URL = "http://192.168.56.12/gitlab/api/v4/projects"
+curl --header "Private-Token: $PERSONAL_TOKEN" --data 'name=E4L&visibility=public' ${URL}
 
 # Retrieve the GitLab Runner registration token
 echo "Retrieving GitLab Runner registration token..."
-RUNNER_TOKEN=$(curl --header "Private-Token: $PERSONAL_TOKEN" "${API_URL_INTEGRATION}/api/v4/runners/registration_token" | jq -r '.token')
+URL = "http://192.168.56.12/gitlab/api/v4/runners/registration_token"
+RUNNER_TOKEN=$(curl --header "Private-Token: $PERSONAL_TOKEN" ${URL} | jq -r '.token')
 echo $RUNNER_TOKEN > /vagrant_data/shared/runner_access_token.txt
 chmod 0644 /vagrant_data/shared/runner_access_token.txt
