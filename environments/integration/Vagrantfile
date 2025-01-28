@@ -30,6 +30,10 @@ Vagrant.configure("2") do |config|
     integration.vm.provision "ansible" do |ansible|
       ansible.playbook = "./playbook/integration_setup.yml"
     end
+
+    integration.vm.provision "shell", path: "../../data/scripts/gitlab_integration.sh"
+
+
   end
 
 end
