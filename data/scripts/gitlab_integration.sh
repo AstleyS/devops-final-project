@@ -65,10 +65,26 @@ echo "Creating GitLab project..."
 URL="http://192.168.56.12/gitlab/api/v4/projects"
 curl --header "Private-Token: $PERSONAL_TOKEN" --data 'name=E4L&visibility=public' ${URL}
 
+SSH_PUBLIC_KEY_PATH="/vagrant_data/shared/gitlab_rsa.pub"
+
+echo "Generating SSH key pair..."
+ssh-keygen -t rsa -b 4096 -C "user1@example.com" -f "$SSH_KEY_PATH" -N "" <<< "y"
+
+cp '/home/vagrant/.ssh/gitlab_rsa.pub' $SSH_PUBLIC_KEY_PATH
+
+echo "Adding SSH key to GitLab..."
+curl --request POST --header "PRIVATE-TOKEN: $PERSONAL_TOKEN" \
+  --form "title=My SSH Key" \
+  --form "key=$(cat $SSH_PUBLIC_KEY_PATH)" \
+  "http://192.168.56.12/gitlab/api/v4/user/keys"
+
+
+
 # Retrieve the GitLab Runner registration token
 echo "Retrieving GitLab Runner registration token..."
 URL="http://192.168.56.12/gitlab/api/v4/runners/registration_token"
-RUNNER_TOKEN=$(curl --header "Private-Token: $PERSONAL_TOKEN" ${URL} | grep -oP '"token"\s*:\s*"\K[^"]+')
+#RUNNER_TOKEN=$(curl --header "Private-Token: $PERSONAL_TOKEN" ${URL} | grep -oP '"runners_token":\s*"\K[^"]+')
+RUNNER_TOKEN=GR1348941RZrYAzzhaVR8rXHKfVv-
 echo $RUNNER_TOKEN > /vagrant_data/shared/runner_access_token.txt
 chmod 0644 /vagrant_data/shared/runner_access_token.txt
 
@@ -80,7 +96,7 @@ gitlab-runner register --non-interactive \
   --description "docker" \
   --tag-list "integration" \
   --executor "docker" \
-  --docker-image "alpine:latest" \
+  --docker-image "docker:stable" \
   --run-untagged="true" \
 
 echo "GitLab Runner registration completed successfully."

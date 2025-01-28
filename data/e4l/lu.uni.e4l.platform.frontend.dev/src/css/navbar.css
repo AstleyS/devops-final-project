@@ -1,0 +1,9 @@
+.custom-nav-link {
+    color: #007bff !important; /* Default color */
+    text-decoration: none !important; /* Removes underline by default */
+}
+
+.custom-nav-link:hover {
+    color: #0056b3 !important; /* Color on hover */
+    text-decoration: underline !important; /* Adds underline on hover */
+}

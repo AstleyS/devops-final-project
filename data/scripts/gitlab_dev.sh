@@ -9,6 +9,8 @@ EMAIL1="user1@example.com"
 EMAIL2="user2@example.com"
 TOKEN_FILE="/vagrant_data/shared/personal_access_token.txt"
 PROJECT_DIR="/vagrant_data/${PROJECT_NAME}"
+FRONTEND_DIR="{{ PROJECT_DIR }}/lu.uni.e4l.platform.frontend.dev"
+
 
 # Ensure the personal access token file exists
 if [ ! -f "$TOKEN_FILE" ]; then
@@ -18,7 +20,6 @@ fi
 
 # Read personal access tokens for both users
 TOKEN1=$(sed -n '1p' "$TOKEN_FILE")
-TOKEN2=$(sed -n '2p' "$TOKEN_FILE")
 
 # Configure Git for User 1
 echo "Configuring Git for $USERNAME1..."
@@ -37,7 +38,7 @@ fi
 
 # Changes for User 1
 echo "Making changes to the project for $USERNAME1..."
-cd "$PROJECT_DIR" || exit
+cd "$FRONTEND_DIR" || exit
 echo "# Dev Environment Setup by $USERNAME1" >> README.md
 
 # Commit and Push Changes for User 1
