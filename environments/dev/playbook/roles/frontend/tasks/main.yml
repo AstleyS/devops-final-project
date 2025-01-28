@@ -54,8 +54,7 @@
     path: "{{ FRONTEND_DIR }}/.env"
     regexp: '^API_URL='
     line: "API_URL={{ API_URL }}"
-    create: yes
-
+    create: yes     
 
 #- name: Run npm install and start
 #  shell: "npm install & npm start"
