@@ -1,0 +1,31 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+
+  config.vm.define "production" do |production|
+    production.vm.box = "ubuntu/jammy64"
+    production.vm.hostname = "dev-frontend"
+
+    # Private network for frontend
+    production.vm.network "private_network", ip: "192.168.56.11" # Frontend IP
+    production.vm.network "forwarded_port", guest: 8088, host: 8090 # Frontend App port
+
+    # Sync folder for frontend
+    production.vm.synced_folder "../../data", "/vagrant_data"
+    
+    # VirtualBox provider specific configuration
+    production.vm.provider "virtualbox" do |vb|
+      vb.memory = "4096" 
+      vb.cpus = 2        
+    end
+
+    # Provisioning using Ansible for frontend
+    production.vm.provision "ansible" do |ansible|
+      ansible.playbook = "./playbook/frontend_setup.yml"
+    end
+
+    production.vm.provision "shell", path: "../../data/scripts/production.sh"
+
+  end
+end

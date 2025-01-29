@@ -1,7 +1,7 @@
 # Scenario 1
 
 ## Goal
-User can upload the project.
+User can clone, apply changes and push it the project.
 
 ## Pre-conditions
     - GitLab is up and running.
@@ -14,6 +14,24 @@ User can upload the project.
         - Initialize the remote repository.
         - Clone it locally.
     Apply changes to the source code locally, commit it, and push it to the remote repository.
+
+
+# Scenario 2
+
+## Goal
+The pipeline is successfully executed.  
+
+
+## Pre-conditions
+- Up and Run gitlab & gitlab runner
+- Tag for docker runner is specified
+- Created project repository on gitlab
+
+  
+## Main Success Scenario
+1. Clone created repository from gitlab
+2. Add `.gitlab-ci.yml` with following content
+
 
 
 # Scenario 2
@@ -33,20 +51,3 @@ All users can clone the project.
         - Initialize the remote repository.
         - Clone it locally.
     Apply changes to the source code locally, commit it, and push it to the remote repository.
-
-
-# Scenario 3
-
-## Goal
-The pipeline is successfully executed.  
-
-
-## Pre-conditions
-- Up and Run gitlab & gitlab runner
-- Tag for docker runner is specified
-- Created project repository on gitlab
-
-  
-## Main Success Scenario
-1. Clone created repository from gitlab
-2. Add `.gitlab-ci.yml` with following content

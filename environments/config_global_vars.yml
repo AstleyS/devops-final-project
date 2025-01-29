@@ -28,6 +28,7 @@ DB_PASSWORD: "12345678"
 
 E4L_ORIGINAL_DIR: /vagrant_data/e4l_original
 PROJECT_DIR: /vagrant_data/e4l
+ARTEFACT_DIR: /vagrant_data/artefact
 
 # Backend configuration
 BACKEND_IP: "192.168.56.10"
@@ -54,8 +55,8 @@ STAGING_DIR: /home/vagrant/staging
 
 # Production environment configuration
 PRODUCTION_IP: "192.168.56.14"
-PRODUCTION_PORT: 8080
-API_URL_PRODUCTION: "http://{{ PRODUCTION_IP }}:8080/e4lapi/"
+PRODUCTION_PORT: 8088
+API_URL_PRODUCTION: "http://{{ PRODUCTION_IP }}:{{ PRODUCTION_PORT}}/e4lapi/"
 PRODUCTION_DIR: /home/vagrant/production
 
 vHome: /home/vagrant

@@ -15,6 +15,7 @@
     unzip -o {{ E4L_ORIGINAL_DIR }}/lu.uni.e4l.platform.api.dev.zip -d {{ PROJECT_DIR }}
   args:
     executable: /bin/bash
+    
 
 # JAVA CONFIGURATION
 - name: Check if Java 20.0.2 is already installed
