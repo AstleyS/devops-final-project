@@ -76,7 +76,7 @@ The project is organized as follows:
 
 ### **1. Initiate the Integration Environment:**
 
-The first step is to start the integration environment, which involves setting up the CI/CD server and configuring the GitLab Runner. The `RUNNER_TOKEN` must be provided manually. The script does the following:
+The first step is to start the integration environment, which involves setting up the CI/CD server and configuring the GitLab Runner. The `RUNNER_TOKEN` must be retrieved/provided manually (more information in the manual step subsection). The script does the following:
   - Starts the integration environment.
   - Registers the GitLab Runner with the appropriate token.
   - Configures the necessary services for CI/CD.
@@ -116,9 +116,9 @@ Upon successful execution of the pipeline, the project is released to the produc
   - Deploying the application to production environment.
 
 ### **Manual Steps:**
-- The `RUNNER_TOKEN` must be provided manually. It is expected to be placed in `/vagrant_data/shared/runner_access_token.txt`. This value is displayed and can be retrieved from the terminal, otherwise you must retrieve it from Gitlab. 
+- The `RUNNER_TOKEN` must be provided manually. It is expected to be placed in `/vagrant_data/shared/runner_access_token.txt` or `/data/shared/runner_access_token.txt`. This value is displayed and can be retrieved from the (integration) terminal, otherwise you must retrieve it from Gitlab. 
 
-- It might be necessary to enter into the developer's environment to proceed with the clone the repo, commit and push the changes. 
+- It might be necessary to enter into the developer's environment to proceed with the clone the repo, commit and push the changes. If that is the case -> user: user1 password: vagrant1234
 
 ---
 

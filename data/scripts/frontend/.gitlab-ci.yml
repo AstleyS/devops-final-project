@@ -1,38 +1,58 @@
-image: node:14
-
 stages:
-  - install
-  - test
-  - run
+  - build
 
-variables:
-  NODE_VERSION: "14.17.0"
-  NPM_VERSION: "6.14.13"
-  ARTIFACT_PATH: "/vagrant_data/artifact"
+services:
+  - name: docker:dind
 
-before_script:
-  - mkdir -p $ARTIFACT_PATH  
-  - node -v
-  - npm -v
-
-install_dependencies:
-  stage: install
-  script:
-    - npm install
-  artifacts:
+build:
+  rules:
+  - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+  - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  image: node:15
+  stage: build
+  script: npm install && npm run build
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    policy: push
     paths:
-      - node_modules/
+      - e4l.frontend.docker/web/dist
 
-run_tests:
-  stage: test
-  script:
-    - npm test
 
-run_project:
-  stage: run
-  script:
-    - npm run build
-    - mv dist/* $ARTIFACT_PATH/  # Move artifacts to /vagrant_data/artifact
-  artifacts:
-    paths:
-      - /vagrant_data/artifact/
+#image: node:14
+#
+#stages:
+#  - install
+#  - test
+#  - run
+#
+#variables:
+#  NODE_VERSION: "14.17.0"
+#  NPM_VERSION: "6.14.13"
+#  ARTIFACT_PATH: "/vagrant_data/artifact"
+#
+#before_script:
+#  - mkdir -p $ARTIFACT_PATH  
+#  - node -v
+#  - npm -v
+#
+#install_dependencies:
+#  stage: install
+#  script:
+#    - npm install
+#  artifacts:
+#    paths:
+#      - node_modules/
+#
+#run_tests:
+#  stage: test
+#  script:
+#    - npm test
+#
+#run_project:
+#  stage: run
+#  script:
+#    - npm run build
+#    - mv dist/* $ARTIFACT_PATH/  # Move artifacts to /vagrant_data/artifact
+#  artifacts:
+#    paths:
+#      - /vagrant_data/artifact/
