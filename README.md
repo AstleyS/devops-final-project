@@ -118,6 +118,8 @@ Upon successful execution of the pipeline, the project is released to the produc
 ### **Manual Steps:**
 - The `RUNNER_TOKEN` must be provided manually. It is expected to be placed in `/vagrant_data/shared/runner_access_token.txt` or `/data/shared/runner_access_token.txt`. This value is displayed and can be retrieved from the (integration) terminal, otherwise you must retrieve it from Gitlab. 
 
+**Note**: If retrieved from the terminal, it's advisable to copy it using the mouse instead of CTRL+SHIFT+C as if this is mistaken with CTRL+C it will stop the integration setup and the remaining steps should be done manually.  
+
 - It might be necessary to enter into the developer's environment to proceed with the clone the repo, commit and push the changes. If that is the case -> user: user1 password: vagrant1234
 
 ---
