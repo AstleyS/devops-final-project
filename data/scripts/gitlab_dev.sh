@@ -76,6 +76,7 @@ curl --request POST --header "PRIVATE-TOKEN: $PERSONAL_TOKEN" \
 
 # Configure Git for User 1
 cd /vagrant_data/e4l/lu.uni.e4l.platform.frontend.dev
+cp /vagrant_data/scripts/.gitlab-ci.yml .
 echo "Configuring Git for $USERNAME1..."
 git config --global user.name "$USERNAME1"
 git config --global user.email "$EMAIL1"

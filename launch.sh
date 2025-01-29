@@ -61,7 +61,7 @@ cd environments/integration
 gnome-terminal --tab --title="Integration Server" -- bash -c "vagrant up && vagrant ssh; exec bash"
 #check_service "$INTEGRATION_URL"
 
-sleep 1500 # wait 25min
+sleep 600 # wait 10min
 
 # Wait for Vagrant to be fully up
 #while ! vagrant status | grep -q "running"; do

@@ -17,6 +17,7 @@ before_script:
   - nvm use $NODE_VERSION
   - nvm alias default $NODE_VERSION
   - npm install -g npm@$NPM_VERSION
+  - mkdir -p "vagrant_data/artifact"  # Ensure the directory exists
 
 install_dependencies:
   stage: install
@@ -35,6 +36,7 @@ run_project:
   stage: run
   script:
     - npm start
+    -  mv dist/* /vagrant_data/artifact
   artifacts:
     paths:
-      - dist/
+      - /vagrant_data/artifact/ 
