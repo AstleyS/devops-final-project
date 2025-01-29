@@ -1,11 +1,11 @@
 # Scenario 1
 
 ## Goal
-User can clone, apply changes and push it the project.
+Developer can clone, apply changes and push it the project.
 
 ## Pre-conditions
     - GitLab is up and running.
-    - A non-root user account has been created.
+    - A non-root developer account has been created.
 
 ## Main Success Scenario
     - Log in to GitLab using a non-root account.
@@ -34,20 +34,18 @@ The pipeline is successfully executed.
 
 
 
-# Scenario 2
+# Scenario 3
 
 ## Goal
-All users can clone the project.
+Developers and Users can verify the changes in production.
 
 ## Pre-conditions
     - GitLab is up and running.
-    - A non-root user account has been created.
+    - Developer applied changes into the source code
+    - Pipeline is triggered.
+    - Production environment is up and running
+    - Artifact is deployed into production
 
 ## Main Success Scenario
 
-    - Log in to GitLab using a non-root account.
-    - Create a project and name it E4L.
-    - Follow the instructions provided by GitLab to:
-        - Initialize the remote repository.
-        - Clone it locally.
-    Apply changes to the source code locally, commit it, and push it to the remote repository.
+    - The changes can be seen on "http://{{ PRODUCTION_IP }}:{{ PRODUCTION_PORT}}/e4lapi/"

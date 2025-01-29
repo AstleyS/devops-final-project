@@ -53,9 +53,6 @@ done
 echo -e "\nPorts restarted.\n"
 
 
-
-# Check if the Integration server is up
-
 # Start Integration Environment
 start_time=$(date +%s)
 
@@ -72,6 +69,11 @@ duration=$(echo "scale=2; $duration_seconds / 60" | bc)
 
 # Display time taken
 echo -e "Integration took $duration minutes.\n"
+
+# Start Production Environment
+echo "Starting Development Environment..."
+cd ../production
+gnome-terminal --tab --title="Production" -- bash -c "vagrant up && vagrant ssh; exec bash"
 
 
 # Start Development Environment

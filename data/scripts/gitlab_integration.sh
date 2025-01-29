@@ -82,19 +82,19 @@ curl --request POST --header "PRIVATE-TOKEN: $PERSONAL_TOKEN" \
 
 # Retrieve the GitLab Runner registration token
 echo "Retrieving GitLab Runner registration token..."
-#URL="http://192.168.56.12/gitlab/api/v4/runners/registration_token"
+URL="http://192.168.56.12/gitlab/api/v4/runners/registration_token"
 RUNNER_TOKEN=$(curl --header "Private-Token: $PERSONAL_TOKEN" ${URL} | grep -oP '"runners_token":\s*"\K[^"]+')
-echo RUNNER_TOKEN
-#echo $RUNNER_TOKEN > /vagrant_data/shared/runner_access_token.txt
 
 RUNNER_TOKEN_FILE=/vagrant_data/shared/runner_access_token.txt
+echo $RUNNER_TOKEN > /vagrant_data/shared/runner_access_token.txt
+
 if [ ! -f "$RUNNER_TOKEN_FILE" ]; then
   echo "Creating $RUNNER_TOKEN_FILE..."
   touch "$RUNNER_TOKEN_FILE"
   chmod 0644 "$RUNNER_TOKEN_FILE"
 fi
 
-# Wait for the token to be provided manually
+# Wait for the token to be provided manually if not able to retrieve programatically
 echo "Waiting for RUNNER_TOKEN to be set in $RUNNER_TOKEN_FILE..."
 while true; do
   RUNNER_TOKEN=$(cat "$RUNNER_TOKEN_FILE" | tr -d '[:space:]') # Read and trim whitespace
