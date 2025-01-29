@@ -1,0 +1,38 @@
+image: node:14
+
+stages:
+  - install
+  - test
+  - run
+
+variables:
+  NODE_VERSION: "14.17.0"
+  NPM_VERSION: "6.14.13"
+  ARTIFACT_PATH: "/vagrant_data/artifact"
+
+before_script:
+  - mkdir -p $ARTIFACT_PATH  
+  - node -v
+  - npm -v
+
+install_dependencies:
+  stage: install
+  script:
+    - npm install
+  artifacts:
+    paths:
+      - node_modules/
+
+run_tests:
+  stage: test
+  script:
+    - npm test
+
+run_project:
+  stage: run
+  script:
+    - npm run build
+    - mv dist/* $ARTIFACT_PATH/  # Move artifacts to /vagrant_data/artifact
+  artifacts:
+    paths:
+      - /vagrant_data/artifact/

@@ -58,7 +58,7 @@ echo -e "\nPorts restarted.\n"
 
 echo "Starting Integration Environment ($INTEGRATION_URL)..."
 cd environments/integration 
-gnome-terminal --tab --title="Integration Server" -- bash -c "vagrant up && vagrant ssh; exec bash"
+gnome-terminal --tab --title="Integration Server" -- bash -c "vagrant up; exec bash"
 #check_service "$INTEGRATION_URL"
 
 sleep 600 # wait 10min
@@ -85,7 +85,7 @@ sleep 600 # wait 10min
 # Start Development Environment
 echo "Starting Development Environment..."
 cd ../dev
-gnome-terminal --tab --title="Development" -- bash -c "vagrant up dev-frontend && vagrant ssh; exec bash"
+gnome-terminal --tab --title="Development" -- bash -c "vagrant up; exec bash"
 
 #check_service $FRONTEND_IP $FRONTEND_PORT
 
