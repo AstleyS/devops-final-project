@@ -7,13 +7,6 @@
     name: "{{ BASIC_PACKAGES }}"
     state: present
 
-- name: Unzip frontend source code
-  shell: |
-    rm -rf {{ FRONTEND_DIR }}/*
-    unzip -o {{ FRONTEND_DIR }}.zip -d /home/vagrant/e4l/
-  args:
-    executable: /bin/bash
-
 - name: Install dependencies for building from source
   apt:
     name:
@@ -50,32 +43,9 @@
 - name: Install specific npm version
   command: "npm install -g npm@7.7.6"
 
-- name: Configure .env file for frontend
-  lineinfile:
-    path: "{{ FRONTEND_DIR }}/.env"
-    regexp: '^API_URL='
-    line: "API_URL={{ API_URL }}"
-    create: yes
-
-
-#- name: Run npm install and start frontend
-#  shell: "npm i && npm start &"
-#  args:
-#    chdir: "{{ FRONTEND_DIR }}"
-#  async: 1  # Run the command asynchronously
-#  poll: 0   # Don't wait for the command to complete
-#
-#- name: Wait for frontend to start
-#  pause:
-#    seconds: 240
-#
-#- name: Verify frontend is running
-#  uri:
-#    url: "{{ API_URL }}"
-#    status_code: 200
-#  register: frontend_status
-#
-#- name: Display frontend status
-#  debug:
-#    var: frontend_status
-
+#- name: Configure .env file for frontend
+#  lineinfile:
+#    path: "{{ ARTIFACT_DIR }}//.env"
+#    regexp: '^API_URL='
+#    line: "API_URL={{ API_URL }}"
+#    create: yes

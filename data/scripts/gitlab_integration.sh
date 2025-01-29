@@ -29,21 +29,6 @@ u.skip_confirmation! # Skip confirmation if desired
 u.save!
 EOF
 
-# Create GitLab User2
-echo "Creating GitLab User2..."
-sudo gitlab-rails console <<EOF
-u = User.new(
-  username: 'user2',
-  email: 'user2@example.com',
-  name: 'User 2',
-  password: 'vagrant1234',
-  password_confirmation: 'vagrant1234'
-)
-u.assign_personal_namespace(Organizations::Organization.default_organization)
-u.skip_confirmation! # Skip confirmation if desired
-u.save!
-EOF
-
 # Retrieve personal access token for user1
 echo "Retrieving personal access token for user1..."
 PERSONAL_TOKEN=$(sudo gitlab-rails runner "
@@ -63,21 +48,7 @@ chmod 0644 /vagrant_data/shared/personal_access_token.txt
 # Create a GitLab project with user1
 echo "Creating GitLab project..."
 URL="http://192.168.56.12/gitlab/api/v4/projects"
-curl --header "Private-Token: $PERSONAL_TOKEN" --data 'name=E4L&visibility=public' ${URL}
-
-SSH_PUBLIC_KEY_PATH="/vagrant_data/shared/gitlab_rsa.pub"
-
-echo "Generating SSH key pair..."
-ssh-keygen -t rsa -b 4096 -C "user1@example.com" -f "$SSH_KEY_PATH" -N "" <<< "y"
-
-cp '/home/vagrant/.ssh/gitlab_rsa.pub' $SSH_PUBLIC_KEY_PATH
-
-echo "Adding SSH key to GitLab..."
-curl --request POST --header "PRIVATE-TOKEN: $PERSONAL_TOKEN" \
-  --form "title=My SSH Key" \
-  --form "key=$(cat $SSH_PUBLIC_KEY_PATH)" \
-  "http://192.168.56.12/gitlab/api/v4/user/keys"
-
+curl --header "Private-Token: $PERSONAL_TOKEN" --data 'name=e4l&visibility=public' ${URL}
 
 
 # Retrieve the GitLab Runner registration token

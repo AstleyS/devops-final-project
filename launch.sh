@@ -54,26 +54,32 @@ echo -e "\nPorts restarted.\n"
 
 
 # Start Integration Environment
-start_time=$(date +%s)
+#start_time=$(date +%s)
 
 echo "Starting Integration Environment ($INTEGRATION_URL)..."
 cd environments/integration 
 gnome-terminal --tab --title="Integration Server" -- bash -c "vagrant up && vagrant ssh; exec bash"
 #check_service "$INTEGRATION_URL"
 
-sleep 1800 # wait 30min
+sleep 1500 # wait 25min
 
-end_time=$(date +%s)
-duration_seconds=$((end_time - start_time))
-duration=$(echo "scale=2; $duration_seconds / 60" | bc)
+# Wait for Vagrant to be fully up
+#while ! vagrant status | grep -q "running"; do
+#  echo "Waiting for Vagrant to be fully up..."
+#  sleep 60
+#done
+
+#end_time=$(date +%s)
+#duration_seconds=$((end_time - start_time))
+#duration=$(echo "scale=2; $duration_seconds / 60" | bc)
 
 # Display time taken
-echo -e "Integration took $duration minutes.\n"
+#echo -e "Integration took $duration minutes.\n"
 
 # Start Production Environment
-echo "Starting Development Environment..."
-cd ../production
-gnome-terminal --tab --title="Production" -- bash -c "vagrant up && vagrant ssh; exec bash"
+#echo "Starting Production Environment..."
+#cd ../production
+#gnome-terminal --tab --title="Production" -- bash -c "vagrant up; exec bash"
 
 
 # Start Development Environment

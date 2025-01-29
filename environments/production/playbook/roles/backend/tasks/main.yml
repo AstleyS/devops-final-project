@@ -10,13 +10,6 @@
     name: "{{ BASIC_PACKAGES }}"
     state: present
 
-- name: Unzip backend source code
-  shell: |
-    rm -rf {{ BACKEND_DIR }}/*
-    unzip -o {{ BACKEND_DIR }}.zip -d /home/vagrant/e4l/
-  args:
-    executable: /bin/bash
-
 # JAVA CONFIGURATION
 - name: Check if Java 20.0.2 is already installed
   ansible.builtin.command:
@@ -106,25 +99,3 @@
     name: mysql
     state: started
     enabled: true
-
-- name: Replace spring.datasource.url in application.properties
-  lineinfile:
-    path: "{{ BACKEND_DIR }}/src/main/resources/application.properties"
-    regexp: '^spring.datasource.url='
-    line: "spring.datasource.url={{ DB_URL }}"
-
-- name: Replace spring.datasource.username in application.properties
-  lineinfile:
-    path: "{{ BACKEND_DIR }}/src/main/resources/application.properties"
-    regexp: '^spring.datasource.username='
-    line: "spring.datasource.username={{ DB_USERNAME }}"
-
-- name: Replace spring.datasource.password in application.properties
-  lineinfile:
-    path: "{{ BACKEND_DIR }}/src/main/resources/application.properties"
-    regexp: '^spring.datasource.password='
-    line: "spring.datasource.password={{ DB_PASSWORD }}"
-
-- name: Create e4l database 
-  ansible.builtin.command: "mysql -u {{ DB_USERNAME }} -p{{ DB_PASSWORD }} -e 'CREATE DATABASE IF NOT EXISTS e4l;'"
-  become: yes

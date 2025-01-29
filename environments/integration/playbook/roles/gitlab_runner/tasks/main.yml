@@ -71,7 +71,7 @@
     headers:
       Private-Token: "{{ personal_token.results[0].stdout }}"
     body:
-      name: "E4L"
+      name: "e4l"
       visibility: "public"
     status_code: 201
   register: project_creation_result
